@@ -12,10 +12,17 @@ keyboard --vckeymap=us --xlayouts='us'
 # System language
 lang en_US.UTF-8
 
+# Use network installation
+url --url="http://dl.rockylinux.org/stg/rocky/8.5/BaseOS/x86_64/os/"
+
+# Firewall information
+firewall --enabled --service=ssh
+
 # Network information
 network  --bootproto=dhcp --ipv6=auto --activate
 network  --hostname=localhost.localdomain
-repo --name="AppStream" --mirrorlist=http://ftp.unicamp.br/pub/rocky/8.5/AppStream/x86_64/os/
+repo --name="AppStream" --baseurl=http://dl.rockylinux.org/stg/rocky/8.5/AppStream/x86_64/os/
+repo --name="BaseOS" --baseurl=http://dl.rockylinux.org/stg/rocky/8.5/BaseOS/x86_64/os/
 # Root password
 rootpw Packer
 # Run the Setup Agent on first boot
