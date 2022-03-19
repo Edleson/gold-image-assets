@@ -15,7 +15,7 @@ lang en_US.UTF-8
 # Network information
 network  --bootproto=dhcp --ipv6=auto --activate
 network  --hostname=localhost.localdomain
-repo --name="AppStream" --baseurl=file:///run/install/repo/AppStream
+repo --name="AppStream" --mirrorlist=http://ftp.unicamp.br/pub/rocky/8.5/AppStream/x86_64/os/
 # Root password
 rootpw Packer
 # Run the Setup Agent on first boot
