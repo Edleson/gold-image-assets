@@ -21,8 +21,7 @@ network  --bootproto=dhcp --ipv6=auto --activate
 network  --hostname=localhost.localdomain
 
 # Repo information
-# repo --name="AppStream" --baseurl=https://download.rockylinux.org/pub/rocky/8.5/AppStream/x86_64/kickstart/
-repo --name="AppStream" --mirrorlist=http://ftp.unicamp.br/pub/rocky/8.5/AppStream/x86_64/os/
+repo --name="AppStream" --baseurl=file:///run/install/repo/AppStream
 
 # Root password
 rootpw Packer
