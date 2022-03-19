@@ -1,94 +1,141 @@
 #version=RHEL8
-ignoredisk --only-use=sda
+# RHEL 8 - Install for Hadoop nodes
+# VSE 20210620.01
 
-# Partition clearing information
-clearpart --none --initlabel
-
-# Use graphical install
-# graphical
-# Use CDROM installation media
-cdrom
-text
-
-# Keyboard layouts
-keyboard --vckeymap=us --xlayouts='us'
-
-# System language
+# Installer options
+graphical
+keyboard --xlayouts='us'
 lang en_US.UTF-8
+timezone America/Sao_Paulo --isUtc --nontp
+firstboot --enable
+reboot
+eula --agreed
 
-# Network information
-network  --bootproto=dhcp --ipv6=auto --activate
-network  --hostname=localhost.localdomain
-
-# Repo information
 repo --name="AppStream" --baseurl=file:///run/install/repo/AppStream
 
-# Root password
-rootpw Packer
-
-# Run the Setup Agent on first boot
-firstboot --disabled
-
-# Do not configure the X Window System
-skipx
-
-# System services
-services --disabled="kdump" --enabled="sshd,rsyslog,chronyd"
-
-# System timezone
-timezone Etc/UTC --isUtc
+# Network information
+network --bootproto=dhcp --device=eth0 --ipv6=ignore --activate --onboot=yes --hostname=localhost.localdomain
+# network --bootproto=dhcp --device=eth1 --ipv6=ignore --activate --onboot=yes
 
 # Disk partitioning information
-part / --fstype="xfs" --grow --size=6144
-part swap --fstype="swap" --size=512
-reboot
+ignoredisk --only-use=sda
+clearpart --drives=sda --all --initlabel
+part /boot --fstype="xfs" --ondisk=sda --size=1024
+part pv.01 --fstype="lvmpv" --ondisk=sda --size=20480 --grow
+volgroup sys --pesize=4096 pv.01
+logvol swap --vgname=sys --name=swap --fstype="swap" --recommended
+logvol / --vgname=sys --name=root --fstype="xfs" --size=30720 --label="os_root"
 
-# Packages Information
-%packages
+# Groups
+group --name=ssh_access --gid=401
+
+# System services
+services --enabled="chronyd"
+services --enabled="ipmi"
+# module --name=modulename --stream=streamname
+
+%packages --ignoremissing
+
+# Plymouth is excluded to eliminate graphical boot
 @^minimal-environment
-openssh-server
-openssh-clients
-sudo
 kexec-tools
-curl
-# allow for ansible
-python3
-python3-libselinux
-
-# unnecessary firmware
--aic94xx-firmware
--atmel-firmware
--b43-openfwwf
--bfa-firmware
--ipw2100-firmware
--ipw2200-firmware
--ivtv-firmware
--iwl100-firmware
--iwl1000-firmware
--iwl3945-firmware
--iwl4965-firmware
--iwl5000-firmware
--iwl5150-firmware
--iwl6000-firmware
--iwl6000g2a-firmware
--iwl6050-firmware
--libertas-usb8388-firmware
--ql2100-firmware
--ql2200-firmware
--ql23xx-firmware
--ql2400-firmware
--ql2500-firmware
--rt61pci-firmware
--rt73usb-firmware
--xorg-x11-drv-ati-firmware
--zd1211-firmware
+chrony
+-plymouth
+device-mapper-multipath
+nano
+tar
+zip
+bzip2
+net-tools
+nfs-utils
+nfs4-acl-tools
+bind-utils
+git
+patch
+gcc
+make
+rpm-build
+rpm-sign
+traceroute
+wget
+telnet
+OpenIPMI
+ipmitool
 %end
 
 %addon com_redhat_kdump --enable --reserve-mb='auto'
 
 %end
 
+# Other Options: don't configure X Window
+skipx
+selinux --enforcing
+
+# Enable kdump
+%addon com_redhat_kdump --enable --reserve-mb='auto'
+%end
+
+# Pre-install activities
+# %pre-install --interpreter=/usr/bin/bash --log /mnt/sysroot/root/pre-install.log
+# 
+# echo "Step: Pre-install"
+# export MAC_ADDR=$( nmcli -p -e no --get-values GENERAL.HWADDR device show eth0 | tr [A-F:] [a-f-] )
+# echo "MAC address: $MAC_ADDR"
+# mkdir /mnt/sysroot/root/bin
+# mkdir /mnt/ks
+# mount -t nfs -o nfsvers=4,nolock,ro os-storage:/os/ks /mnt/ks
+# cp /mnt/ks/satellite-6-registration-vse.sh /mnt/sysroot/root/bin
+# if [ -f /mnt/ks/supplemental/hostnames ]; then
+#   H=$( grep $MAC_ADDR /mnt/ks/supplemental/hostnames | cut -d' ' -f2 )
+#   if [[ $H ]]; then
+#     echo "Found hostname: $H" 
+#     echo $H > /mnt/sysroot/root/hostname.tmp
+#   fi
+# fi
+# cp /mnt/ks/supplemental/dell-system-update.repo /mnt/sysroot/etc/yum.repos.d
+# echo "Pre-install activities complete"
+# %end
+
+# Post-install activities (runs in installed system unless --nochroot option is used)
+# %post --interpreter=/usr/bin/bash --log /root/post-install.log
+# 
+# set -x
+# echo "Step: Post-install"
+# # See if we found a hostname from pre-install step
+# if [ -f /root/hostname.tmp ]; then
+#   export H=$( cat /root/hostname.tmp )
+#   echo "Setting hostname to $H"
+#   echo $H > /etc/hostname
+# fi
+# 
+# # Get info about just-installed system
+# source /etc/os-release
+# export NAME ID VERSION_ID
+# 
+# # Mount NFS install repos
+# mkdir -p /srv/osfiles
+# echo "os-storage:/os/osfiles /srv/osfiles nfs _netdev,nfsvers=4,sec=sys 0 0" >> /etc/fstab
+# 
+# # Configure repos for dnf/yum
+# 
+# cat <<EOF > /etc/yum.repos.d/nfs.repo
+# [nfs-baseos]
+# name=Local $NAME $VERSION_ID BaseOS
+# baseurl=file:///srv/osfiles/$ID/$VERSION_ID/BaseOS
+# enabled=1
+# gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+# 
+# [nfs-appstream]
+# name=Local $NAME $VERSION_ID AppStream
+# baseurl=file:///srv/osfiles/$ID/$VERSION_ID/AppStream
+# enabled=1
+# gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+# EOF
+# 
+# %end
+
 %post
+
 
 # this is installed by default but we don't need it in virt
 echo "Removing linux-firmware package."
@@ -152,8 +199,10 @@ sed -i "s/^.*requiretty/#Defaults requiretty/" /etc/sudoers
 yum clean all
 %end
 
+
+# Password policies
 %anaconda
-pwpolicy root --minlen=6 --minquality=1 --notstrict --nochanges --notempty
-pwpolicy user --minlen=6 --minquality=1 --notstrict --nochanges --emptyok
-pwpolicy luks --minlen=6 --minquality=1 --notstrict --nochanges --notempty
+pwpolicy root --minlen=6 --minquality=1 --strict --nochanges --notempty
+pwpolicy user --minlen=6 --minquality=1 --strict --nochanges --notempty
+pwpolicy luks --minlen=6 --minquality=1 --strict --nochanges --notempty
 %end
