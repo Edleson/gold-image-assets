@@ -186,9 +186,6 @@ sed -i "s/^.*requiretty/#Defaults requiretty/" /etc/sudoers
 
 yum clean all
 
-passwd -d root
-passwd -l root
-
 %end
 
 %anaconda
