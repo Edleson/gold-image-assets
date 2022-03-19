@@ -40,15 +40,31 @@ reboot
 
 
 %packages
-@^minimal-environment
-openssh-server
-openssh-clients
-sudo
-kexec-tools
-curl
-# allow for ansible
-python3
-python3-libselinux
+@core
+NetworkManager
+chrony
+cloud-init
+cloud-utils-growpart
+cockpit-system
+cockpit-ws
+dhcp-client
+dnf
+dnf-utils
+dracut-config-generic
+dracut-norescue
+firewalld
+gdisk
+grub2
+kernel
+nfs-utils
+python3-jsonschema
+qemu-guest-agent
+rng-tools
+rocky-release
+rsync
+tar
+yum
+yum-utils
 
 # unnecessary firmware
 -aic94xx-firmware
