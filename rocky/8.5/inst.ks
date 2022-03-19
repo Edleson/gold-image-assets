@@ -1,14 +1,18 @@
 #version=RHEL8
 ignoredisk --only-use=sda
+
 # Partition clearing information
 clearpart --none --initlabel
+
 # Use graphical install
 # graphical
 # Use CDROM installation media
 cdrom
 text
+
 # Keyboard layouts
-keyboard --vckeymap=us --xlayouts='us'
+keyboard --xlayouts='br'
+
 # System language
 lang en_US.UTF-8
 
@@ -23,21 +27,26 @@ network  --bootproto=dhcp --ipv6=auto --activate
 network  --hostname=localhost.localdomain
 repo --name="AppStream" --baseurl=http://dl.rockylinux.org/stg/rocky/8.5/AppStream/x86_64/os/
 repo --name="BaseOS" --baseurl=http://dl.rockylinux.org/stg/rocky/8.5/BaseOS/x86_64/os/
+
 # Root password
 rootpw Packer
+
 # Run the Setup Agent on first boot
 firstboot --disabled
+
 # Do not configure the X Window System
 skipx
+
 # System services
-services --disabled="kdump" --enabled="sshd,rsyslog,chronyd"
+services --disabled="kdump" --enabled="NetworkManager,sshd,rsyslog,chronyd,cloud-init,cloud-init-local,cloud-config,cloud-final,rngd,qemu-guest-agent"
+
 # System timezone
-timezone Etc/UTC --isUtc
+timezone America/Sao_Paulo --isUtc
+
 # Disk partitioning information
 part / --fstype="xfs" --grow --size=6144
 part swap --fstype="swap" --size=512
 reboot
-
 
 %packages
 @core
@@ -65,6 +74,22 @@ rsync
 tar
 yum
 yum-utils
+traceroute
+wget
+telnet
+OpenIPMI
+ipmitool
+git
+nano
+kexec-tools
+bind-utils
+zip
+net-tools
+nfs-utils
+nfs4-acl-tools
+jq
+patch
+bzip2
 
 # unnecessary firmware
 -aic94xx-firmware
@@ -100,8 +125,6 @@ yum-utils
 %end
 
 %post
-
-
 # this is installed by default but we don't need it in virt
 echo "Removing linux-firmware package."
 yum -C -y remove linux-firmware
@@ -162,6 +185,10 @@ yum update -y
 sed -i "s/^.*requiretty/#Defaults requiretty/" /etc/sudoers
 
 yum clean all
+
+passwd -d root
+passwd -l root
+
 %end
 
 %anaconda
