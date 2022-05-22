@@ -25,8 +25,8 @@ firewall --enabled --service=ssh
 # Network information
 network  --bootproto=dhcp --ipv6=auto --activate
 network  --hostname=localhost.localdomain
-repo --name="AppStream" --baseurl=http://dl.rockylinux.org/stg/rocky/8.5/AppStream/x86_64/os/
-repo --name="BaseOS" --baseurl=http://dl.rockylinux.org/stg/rocky/8.5/BaseOS/x86_64/os/
+repo --name="AppStream" --baseurl=http://dl.rockylinux.org/pub/rocky/8.5/AppStream/x86_64/os/
+repo --name="BaseOS" --baseurl=http://dl.rockylinux.org/pub/rocky/8.5/BaseOS/x86_64/os/
 
 # Root password
 rootpw Packer
