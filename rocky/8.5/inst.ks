@@ -6,6 +6,7 @@ clearpart --none --initlabel
 
 # Use graphical install
 # graphical
+
 # Use CDROM installation media
 cdrom
 text
@@ -17,7 +18,7 @@ keyboard --xlayouts='br'
 lang en_US.UTF-8
 
 # Use network installation
-url --url="http://dl.rockylinux.org/stg/rocky/8.5/BaseOS/x86_64/os/"
+url --url="http://dl.rockylinux.org/pub/rocky/8.5/BaseOS/x86_64/os/"
 
 # Firewall information
 firewall --enabled --service=ssh
@@ -25,11 +26,12 @@ firewall --enabled --service=ssh
 # Network information
 network  --bootproto=dhcp --ipv6=auto --activate
 network  --hostname=localhost.localdomain
+
 repo --name="AppStream" --baseurl=http://dl.rockylinux.org/pub/rocky/8.5/AppStream/x86_64/os/
 repo --name="BaseOS" --baseurl=http://dl.rockylinux.org/pub/rocky/8.5/BaseOS/x86_64/os/
 
 # Root password
-rootpw Packer
+rootpw --iscrypted $6$4buGu5Vw7TCmOjXv$Jxtd.W7i1XprZaGA5yem2icnNmTAt.8VM3RspvnYhtoWw548Itrr5uVuQiz3/6OSFBqdTSr4t.DsXxzOYeTpM0
 
 # Run the Setup Agent on first boot
 firstboot --disabled
@@ -48,7 +50,7 @@ part / --fstype="xfs" --grow --size=6144
 part swap --fstype="swap" --size=512
 reboot
 
-%packages
+%packages --ignoremissing --excludedocs
 @core
 NetworkManager
 chrony
@@ -125,6 +127,23 @@ bzip2
 %end
 
 %post
+
+# Manage devops access
+groupadd -g 1000 devops
+useradd -m -g 1000 -u 1001 devops
+mkdir /home/devops/.ssh
+
+echo -e "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC/NI0Q4dJJt3pubtl496YHP7kLx7eCkOOZF8KN7gn5uyYozDeHdBgYcG8WfJnEOT1tqTBBNAKyLP8RFGNuMPkiPvwyvJ8lIe/vubIzMxAkStr59/KoET2gEsBsZTCbRYEpyFgbMfuiz5bEaX/kK2A5ISWIzKwtyHygp2mocpRl3be/xjC6LhHVmYi0oIRHI5PkVjdf545gKZHnklwnmuXcNtjJ9H0uelw1a1UWDhXYmgLCdG9tbNSeoFe9cWL+c/IibvvjQHo5F8E8yoLhXjai+cMaFblH2oIjCl+HD/47DPKz0EBbvjq7XwpjKzPLFnQiCm7S1eAqit/Qn4M0/PpktGBb8U/SDbtM9zdFF0H74iVhw8frL/EiPslwOK3Uz43QpgKTuJQvCOIGR4k4Sizer60J2FDSQSx17PYMQs225HVAgcd2JPGwDaqIw69Rt4DfYbzeknn7/aYmTkQ6u43RxyGTS6AfyCxAwt1U6ry0qqJE0e1GeZEC7S489FVnqMU= edleson@DESKTOP-SPBKIGG" >  /home/devops/.ssh/authorized_keys
+chown -R devops:devops /home/devops/.ssh
+chmod 700 /home/devops/.ssh
+chmod 600 /home/devops/.ssh/authorized_keys
+
+echo "devops ALL=(ALL:ALL) NOPASSWD:ALL" > /etc/sudoers.d/devops
+chmod 440 /etc/sudoers.d/devops
+
+systemctl enable vmtoolsd
+systemctl start vmtoolsd
+
 # this is installed by default but we don't need it in virt
 echo "Removing linux-firmware package."
 yum -C -y remove linux-firmware
@@ -164,7 +183,6 @@ EOL
 
 # make sure firstboot doesn't start
 echo "RUN_FIRSTBOOT=NO" > /etc/sysconfig/firstboot
-
 echo "Fixing SELinux contexts."
 touch /var/log/cron
 touch /var/log/boot.log
@@ -174,16 +192,8 @@ mkdir -p /var/cache/yum
 # reorder console entries
 sed -i 's/console=tty0/console=tty0 console=ttyS0,115200n8/' /boot/grub2/grub.cfg
 
-#echo "Zeroing out empty space."
-# This forces the filesystem to reclaim space from deleted files
-# dd bs=1M if=/dev/zero of=/var/tmp/zeros || :
-# rm -f /var/tmp/zeros
-# echo "(Don't worry -- that out-of-space error was expected.)"
-
 yum update -y
-
 sed -i "s/^.*requiretty/#Defaults requiretty/" /etc/sudoers
-
 yum clean all
 
 %end
