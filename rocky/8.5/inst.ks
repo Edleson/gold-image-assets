@@ -1,100 +1,41 @@
-# Use CDROM installation media
 install
-url --url=http://dl.rockylinux.org/pub/rocky/8.5/BaseOS/x86_64/os/
-repo --name="AppStream" --baseurl=http://dl.rockylinux.org/pub/rocky/8.5/AppStream/x86_64/os/
-repo --name="BaseOS" --baseurl=http://dl.rockylinux.org/pub/rocky/8.5/BaseOS/x86_64/os/
 cdrom
-# Use text install
+lang en_US.UTF-8
+keyboard us
+network --bootproto=dhcp
+rootpw vagrant
+firewall --disabled
+selinux --permissive
+timezone UTC
+bootloader --location=mbr
 text
-# graphical
-# Don't run the Setup Agent on first boot
+skipx
+zerombr
+clearpart --all --initlabel
+autopart
+auth --enableshadow --passalgo=sha512 --kickstart
 firstboot --disabled
 eula --agreed
-#ignoredisk --only-use=sda
-# Keyboard layouts
-keyboard --xlayouts='br'
-# System language
-lang en_US.UTF-8
-# Network information
-network  --bootproto=dhcp --ipv6=auto --activate
-network  --hostname=rocky85.localdomain
-# Root password
-rootpw --iscrypted $6$4buGu5Vw7TCmOjXv$Jxtd.W7i1XprZaGA5yem2icnNmTAt.8VM3RspvnYhtoWw548Itrr5uVuQiz3/6OSFBqdTSr4t.DsXxzOYeTpM0
-# System services
-selinux --permissive
-firewall --enabled --service="ssh"
-services --enabled="NetworkManager,sshd,rsyslog,chronyd,cloud-init,cloud-init-local,cloud-config,cloud-final,rngd,qemu-guest-agent"
-# System timezone
-timezone America/Sao_Paulo --isUtc
-# System booloader configuration
-bootloader --location=mbr 
-# Partition clearing information
-clearpart --none --initlabel
-# Disk partitionning information
-zerombr
-autopart
-#part /boot --fstype="xfs" --ondisk=sda --size=512
-#part pv.01 --fstype="lvmpv" --ondisk=sda --grow
-#volgroup vg_root --pesize=4096 pv.01
-#logvol /home --fstype="xfs" --size=5120 --name=lv_home --vgname=vg_root
-#logvol /var --fstype="xfs" --size=10240 --name=lv_var --vgname=vg_root
-#logvol / --fstype="xfs" --size=10240 --name=lv_root --vgname=vg_root
-#logvol swap --fstype="swap" --size=4092 --name=lv_swap --vgname=vg_root
-
-# Use network installation
-#url --url="http://dl.rockylinux.org/pub/rocky/8.5/BaseOS/x86_64/os/"
-#repo --name="BaseOS" --baseurl=http://dl.rockylinux.org/pub/rocky/8.5/BaseOS/x86_64/os/
-# Do not configure the X Window System
-skipx
+services --enabled=NetworkManager,sshd
+user --name=vagrant --plaintext --password=vagrant --groups=wheel
 reboot
-# System services
-#services --disabled="kdump" --enabled="NetworkManager,sshd,rsyslog,chronyd,cloud-init,cloud-init-local,cloud-config,cloud-final,rngd,qemu-guest-agent"
-# Disk partitioning information
-#part / --fstype="xfs" --grow --size=6144
-#part swap --fstype="swap" --size=512
 
 %packages --ignoremissing --excludedocs
-@core
-NetworkManager
-chrony
-cloud-init
-cloud-utils-growpart
-cockpit-system
-cockpit-ws
-dhcp-client
-dnf
-dnf-utils
-dracut-config-generic
-dracut-norescue
-firewalld
-gdisk
-grub2
-kernel
-nfs-utils
-python3-jsonschema
-qemu-guest-agent
-rng-tools
-rocky-release
-rsync
-tar
-yum
-yum-utils
-traceroute
-wget
-telnet
-OpenIPMI
-ipmitool
-git
-nano
-kexec-tools
-bind-utils
-zip
+@Base
+@Core
+@Development Tools
+openssh-clients
+sudo
+openssl-devel
+readline-devel
+zlib-devel
+kernel-headers
+kernel-devel
 net-tools
-nfs-utils
-nfs4-acl-tools
-jq
-patch
-bzip2
+vim
+wget
+curl
+rsync
 
 # unnecessary firmware
 -aic94xx-firmware
@@ -125,81 +66,18 @@ bzip2
 -zd1211-firmware
 %end
 
-%addon com_redhat_kdump --enable --reserve-mb='auto'
-
-%end
-
 %post
-
-# Manage k3tadmin access
-useradd -m -u 1000 k3tadmin
-mkdir /home/k3tadmin/.ssh
-echo -e "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDih36iZoYeRyTjUwZI6Ec7UNzRW/498fqW0XCHysTtn5aQSpmrJAiBOWQ4aLWHnswRQaw3fR+hR7OQ9De9pOKe7i6vv35CQlnpeyVmQf0Yw3FYTbbCLi7YBuLPgqp+XMUSG/ugtEivn5ZYV3wjE1C3IETqceH2R8u5qbSuyHlW5DbuYoKyiLo0RXm+2Lpya+qKVV1lHYR04oJKNSN4xYRVngrMNTmOgUpm+1fH8K6NAtYHsTP97MnkAFi2wCgngANJ0HX7BI/zNMxYkH+X+aVuPyy5riRqbzIjCb4a0PBw9mHQExleiIbI+iB5VPqKyQaKEWe6I1O/iNvbjOasDarVroTkgdQM5RuT4mM+EQkB0gjrbtOxA4aV+MKbwdu1SIEu18sYnf/qkts8g27S3/aCWbhkXxvAyhbdHIRUNMtS1BJY/XJgSDz7zFKgBLMdsw9eCCcI8hAbVQSsFVe8vrDUPjPT/5KNLme3xX1E1FSKC4OApMeYTWNDl3wfoQ4zQPM= k3tadmin@kode3" >  /home/k3tadmin/.ssh/authorized_keys
-chown -R k3tadmin:k3tadmin /home/k3tadmin/.ssh
-chmod 700 /home/k3tadmin/.ssh
-chmod 600 /home/k3tadmin/.ssh/authorized_keys
-echo "k3tadmin ALL=(ALL:ALL) NOPASSWD:ALL" > /etc/sudoers.d/k3tadmin
-chmod 440 /etc/sudoers.d/k3tadmin
-
-systemctl enable vmtoolsd
-systemctl start vmtoolsd
-
-# this is installed by default but we don't need it in virt
-echo "Removing linux-firmware package."
-yum -C -y remove linux-firmware
-
-# Remove firewalld; it is required to be present for install/image building.
-echo "Removing firewalld."
-yum -C -y remove firewalld --setopt="clean_requirements_on_remove=1"
-
-# remove avahi and networkmanager
-echo "Removing avahi/zeroconf and NetworkManager"
-yum -C -y remove avahi\* 
-
-echo -n "Getty fixes"
-# although we want console output going to the serial console, we don't
-# actually have the opportunity to login there. FIX.
-# we don't really need to auto-spawn _any_ gettys.
-sed -i '/^#NAutoVTs=.*/ a\
-NAutoVTs=0' /etc/systemd/logind.conf
-
-# set virtual-guest as default profile for tuned
-echo "virtual-guest" > /etc/tuned/active_profile
-
-# Because memory is scarce resource in most cloud/virt environments,
-# and because this impedes forensics, we are differing from the Fedora
-# default of having /tmp on tmpfs.
-echo "Disabling tmpfs for /tmp."
-systemctl mask tmp.mount
-
-cat <<EOL > /etc/sysconfig/kernel
-# UPDATEDEFAULT specifies if new-kernel-pkg should make
-# new kernels the default
-UPDATEDEFAULT=yes
-
-# DEFAULTKERNEL specifies the default kernel package type
-DEFAULTKERNEL=kernel
-EOL
-
-# make sure firstboot doesn't start
-echo "RUN_FIRSTBOOT=NO" > /etc/sysconfig/firstboot
-echo "Fixing SELinux contexts."
-touch /var/log/cron
-touch /var/log/boot.log
-mkdir -p /var/cache/yum
-/usr/sbin/fixfiles -R -a restore
-
-# reorder console entries
-sed -i 's/console=tty0/console=tty0 console=ttyS0,115200n8/' /boot/grub2/grub.cfg
-
 yum update -y
+
+# update root certs
+wget -O/tmp/ca-bundle.crt https://curl.haxx.se/ca/cacert.pem
+
+openssl x509 -text -in /tmp/ca-bundle.crt > /dev/null && mv /tmp/ca-bundle.crt /etc/pki/tls/certs/ca-bundle.crt
+
+# sudo
+yum install -y sudo
+echo "vagrant        ALL=(ALL)       NOPASSWD: ALL" >> /etc/sudoers.d/vagrant
 sed -i "s/^.*requiretty/#Defaults requiretty/" /etc/sudoers
+
 yum clean all
-
-%end
-
-%anaconda
-pwpolicy root --minlen=6 --minquality=1 --notstrict --nochanges --notempty
-pwpolicy user --minlen=6 --minquality=1 --notstrict --nochanges --emptyok
-pwpolicy luks --minlen=6 --minquality=1 --notstrict --nochanges --notempty
 %end
