@@ -9,7 +9,7 @@ text
 # Don't run the Setup Agent on first boot
 firstboot --disabled
 eula --agreed
-ignoredisk --only-use=sda
+#ignoredisk --only-use=sda
 # Keyboard layouts
 keyboard --xlayouts='br'
 # System language
@@ -26,7 +26,7 @@ services --enabled="NetworkManager,sshd,rsyslog,chronyd,cloud-init,cloud-init-lo
 # System timezone
 timezone America/Sao_Paulo --isUtc
 # System booloader configuration
-# bootloader --location=mbr --boot-drive=sda
+bootloader --location=mbr 
 # Partition clearing information
 clearpart --none --initlabel
 # Disk partitionning information
