@@ -1,54 +1,51 @@
-#version=RHEL8
-ignoredisk --only-use=sda
-
-# Partition clearing information
-clearpart --none --initlabel
-
-# Use graphical install
-# graphical
-
 # Use CDROM installation media
+repo --name="AppStream" --baseurl=http://dl.rockylinux.org/pub/rocky/8.5/AppStream/x86_64/os/
 cdrom
+# Use text install
 text
-
+# Don't run the Setup Agent on first boot
+firstboot --disabled
+eula --agreed
+ignoredisk --only-use=sda
 # Keyboard layouts
 keyboard --xlayouts='br'
-
 # System language
 lang en_US.UTF-8
-
-# Use network installation
-url --url="http://dl.rockylinux.org/pub/rocky/8.5/BaseOS/x86_64/os/"
-
-# Firewall information
-firewall --enabled --service=ssh
-
 # Network information
 network  --bootproto=dhcp --ipv6=auto --activate
-network  --hostname=localhost.localdomain
-
-repo --name="AppStream" --baseurl=http://dl.rockylinux.org/pub/rocky/8.5/AppStream/x86_64/os/
-repo --name="BaseOS" --baseurl=http://dl.rockylinux.org/pub/rocky/8.5/BaseOS/x86_64/os/
-
+network  --hostname=rocky85.localdomain
 # Root password
 rootpw --iscrypted $6$4buGu5Vw7TCmOjXv$Jxtd.W7i1XprZaGA5yem2icnNmTAt.8VM3RspvnYhtoWw548Itrr5uVuQiz3/6OSFBqdTSr4t.DsXxzOYeTpM0
-
-# Run the Setup Agent on first boot
-firstboot --disabled
-
-# Do not configure the X Window System
-skipx
-
 # System services
-services --disabled="kdump" --enabled="NetworkManager,sshd,rsyslog,chronyd,cloud-init,cloud-init-local,cloud-config,cloud-final,rngd,qemu-guest-agent"
-
+selinux --permissive
+firewall --enabled --service="ssh"
+services --enabled="NetworkManager,sshd,rsyslog,chronyd,cloud-init,cloud-init-local,cloud-config,cloud-final,rngd,qemu-guest-agent"
 # System timezone
 timezone America/Sao_Paulo --isUtc
+# System booloader configuration
+bootloader --location=mbr --boot-drive=sda
+# Partition clearing information
+clearpart --all --initlabel --drives=sda
+# Disk partitionning information
+part /boot --fstype="xfs" --ondisk=sda --size=512
+part pv.01 --fstype="lvmpv" --ondisk=sda --grow
+volgroup vg_root --pesize=4096 pv.01
+logvol /home --fstype="xfs" --size=5120 --name=lv_home --vgname=vg_root
+logvol /var --fstype="xfs" --size=10240 --name=lv_var --vgname=vg_root
+logvol / --fstype="xfs" --size=10240 --name=lv_root --vgname=vg_root
+logvol swap --fstype="swap" --size=4092 --name=lv_swap --vgname=vg_root
 
-# Disk partitioning information
-part / --fstype="xfs" --grow --size=6144
-part swap --fstype="swap" --size=512
+# Use network installation
+#url --url="http://dl.rockylinux.org/pub/rocky/8.5/BaseOS/x86_64/os/"
+#repo --name="BaseOS" --baseurl=http://dl.rockylinux.org/pub/rocky/8.5/BaseOS/x86_64/os/
+# Do not configure the X Window System
+skipx
 reboot
+# System services
+#services --disabled="kdump" --enabled="NetworkManager,sshd,rsyslog,chronyd,cloud-init,cloud-init-local,cloud-config,cloud-final,rngd,qemu-guest-agent"
+# Disk partitioning information
+#part / --fstype="xfs" --grow --size=6144
+#part swap --fstype="swap" --size=512
 
 %packages --ignoremissing --excludedocs
 @core
