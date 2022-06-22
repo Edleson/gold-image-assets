@@ -30,13 +30,14 @@ timezone America/Sao_Paulo --isUtc
 # Partition clearing information
 clearpart --none --initlabel
 # Disk partitionning information
-part /boot --fstype="xfs" --ondisk=sda --size=512
-part pv.01 --fstype="lvmpv" --ondisk=sda --grow
-volgroup vg_root --pesize=4096 pv.01
-logvol /home --fstype="xfs" --size=5120 --name=lv_home --vgname=vg_root
-logvol /var --fstype="xfs" --size=10240 --name=lv_var --vgname=vg_root
-logvol / --fstype="xfs" --size=10240 --name=lv_root --vgname=vg_root
-logvol swap --fstype="swap" --size=4092 --name=lv_swap --vgname=vg_root
+autopart
+#part /boot --fstype="xfs" --ondisk=sda --size=512
+#part pv.01 --fstype="lvmpv" --ondisk=sda --grow
+#volgroup vg_root --pesize=4096 pv.01
+#logvol /home --fstype="xfs" --size=5120 --name=lv_home --vgname=vg_root
+#logvol /var --fstype="xfs" --size=10240 --name=lv_var --vgname=vg_root
+#logvol / --fstype="xfs" --size=10240 --name=lv_root --vgname=vg_root
+#logvol swap --fstype="swap" --size=4092 --name=lv_swap --vgname=vg_root
 
 # Use network installation
 #url --url="http://dl.rockylinux.org/pub/rocky/8.5/BaseOS/x86_64/os/"
