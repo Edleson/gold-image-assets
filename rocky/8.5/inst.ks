@@ -1,8 +1,8 @@
 # Use CDROM installation media
 install
-#url --url=http://dl.rockylinux.org/pub/rocky/8.5/BaseOS/x86_64/os/
-#repo --name="AppStream" --baseurl=http://dl.rockylinux.org/pub/rocky/8.5/AppStream/x86_64/os/
-#repo --name="BaseOS" --baseurl=http://dl.rockylinux.org/pub/rocky/8.5/BaseOS/x86_64/os/
+url --url=http://dl.rockylinux.org/pub/rocky/8.5/BaseOS/x86_64/os/
+repo --name="AppStream" --baseurl=http://dl.rockylinux.org/pub/rocky/8.5/AppStream/x86_64/os/
+repo --name="BaseOS" --baseurl=http://dl.rockylinux.org/pub/rocky/8.5/BaseOS/x86_64/os/
 cdrom
 # Use text install
 text
