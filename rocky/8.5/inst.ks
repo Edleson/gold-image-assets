@@ -6,6 +6,7 @@ cdrom
 # Use text install
 text
 # graphical
+auth --enableshadow --passalgo=sha512 --kickstart
 # Don't run the Setup Agent on first boot
 firstboot --disabled
 eula --agreed
