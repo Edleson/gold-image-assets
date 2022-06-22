@@ -9,7 +9,7 @@ graphical
 # Don't run the Setup Agent on first boot
 firstboot --disabled
 eula --agreed
-ignoredisk --only-use=sda
+# ignoredisk --only-use=sda
 # Keyboard layouts
 keyboard --xlayouts='br'
 # System language
