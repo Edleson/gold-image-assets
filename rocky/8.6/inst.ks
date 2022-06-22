@@ -128,18 +128,15 @@ bzip2
 
 %post
 
-# Manage devops access
-groupadd -g 1000 devops
-useradd -m -g 1000 -u 1001 devops
-mkdir /home/devops/.ssh
-
-echo -e "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC/NI0Q4dJJt3pubtl496YHP7kLx7eCkOOZF8KN7gn5uyYozDeHdBgYcG8WfJnEOT1tqTBBNAKyLP8RFGNuMPkiPvwyvJ8lIe/vubIzMxAkStr59/KoET2gEsBsZTCbRYEpyFgbMfuiz5bEaX/kK2A5ISWIzKwtyHygp2mocpRl3be/xjC6LhHVmYi0oIRHI5PkVjdf545gKZHnklwnmuXcNtjJ9H0uelw1a1UWDhXYmgLCdG9tbNSeoFe9cWL+c/IibvvjQHo5F8E8yoLhXjai+cMaFblH2oIjCl+HD/47DPKz0EBbvjq7XwpjKzPLFnQiCm7S1eAqit/Qn4M0/PpktGBb8U/SDbtM9zdFF0H74iVhw8frL/EiPslwOK3Uz43QpgKTuJQvCOIGR4k4Sizer60J2FDSQSx17PYMQs225HVAgcd2JPGwDaqIw69Rt4DfYbzeknn7/aYmTkQ6u43RxyGTS6AfyCxAwt1U6ry0qqJE0e1GeZEC7S489FVnqMU= edleson@DESKTOP-SPBKIGG" >  /home/devops/.ssh/authorized_keys
-chown -R devops:devops /home/devops/.ssh
-chmod 700 /home/devops/.ssh
-chmod 600 /home/devops/.ssh/authorized_keys
-
-echo "devops ALL=(ALL:ALL) NOPASSWD:ALL" > /etc/sudoers.d/devops
-chmod 440 /etc/sudoers.d/devops
+# Manage k3tadmin access
+useradd -m -u 1000 k3tadmin
+mkdir /home/k3tadmin/.ssh
+echo -e "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDih36iZoYeRyTjUwZI6Ec7UNzRW/498fqW0XCHysTtn5aQSpmrJAiBOWQ4aLWHnswRQaw3fR+hR7OQ9De9pOKe7i6vv35CQlnpeyVmQf0Yw3FYTbbCLi7YBuLPgqp+XMUSG/ugtEivn5ZYV3wjE1C3IETqceH2R8u5qbSuyHlW5DbuYoKyiLo0RXm+2Lpya+qKVV1lHYR04oJKNSN4xYRVngrMNTmOgUpm+1fH8K6NAtYHsTP97MnkAFi2wCgngANJ0HX7BI/zNMxYkH+X+aVuPyy5riRqbzIjCb4a0PBw9mHQExleiIbI+iB5VPqKyQaKEWe6I1O/iNvbjOasDarVroTkgdQM5RuT4mM+EQkB0gjrbtOxA4aV+MKbwdu1SIEu18sYnf/qkts8g27S3/aCWbhkXxvAyhbdHIRUNMtS1BJY/XJgSDz7zFKgBLMdsw9eCCcI8hAbVQSsFVe8vrDUPjPT/5KNLme3xX1E1FSKC4OApMeYTWNDl3wfoQ4zQPM= k3tadmin@kode3" >  /home/k3tadmin/.ssh/authorized_keys
+chown -R k3tadmin:k3tadmin /home/k3tadmin/.ssh
+chmod 700 /home/k3tadmin/.ssh
+chmod 600 /home/k3tadmin/.ssh/authorized_keys
+echo "k3tadmin ALL=(ALL:ALL) NOPASSWD:ALL" > /etc/sudoers.d/k3tadmin
+chmod 440 /etc/sudoers.d/k3tadmin
 
 systemctl enable vmtoolsd
 systemctl start vmtoolsd
