@@ -28,7 +28,7 @@ timezone America/Sao_Paulo --isUtc
 # System booloader configuration
 bootloader --location=mbr --boot-drive=sda
 # Partition clearing information
-clearpart --all --initlabel --drives=sda
+#clearpart --all --initlabel --drives=sda
 # Disk partitionning information
 part /boot --fstype="xfs" --ondisk=sda --size=512
 part pv.01 --fstype="lvmpv" --ondisk=sda --grow
