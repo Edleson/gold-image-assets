@@ -1,7 +1,8 @@
 # Use CDROM installation media
-url --url=http://dl.rockylinux.org/pub/rocky/8.5/BaseOS/x86_64/os/
-repo --name="AppStream" --baseurl=http://dl.rockylinux.org/pub/rocky/8.5/AppStream/x86_64/os/
-repo --name="BaseOS" --baseurl=http://dl.rockylinux.org/pub/rocky/8.5/BaseOS/x86_64/os/
+install
+#url --url=http://dl.rockylinux.org/pub/rocky/8.5/BaseOS/x86_64/os/
+#repo --name="AppStream" --baseurl=http://dl.rockylinux.org/pub/rocky/8.5/AppStream/x86_64/os/
+#repo --name="BaseOS" --baseurl=http://dl.rockylinux.org/pub/rocky/8.5/BaseOS/x86_64/os/
 cdrom
 # Use text install
 text
@@ -30,6 +31,7 @@ bootloader --location=mbr
 # Partition clearing information
 clearpart --none --initlabel
 # Disk partitionning information
+zerombr
 autopart
 #part /boot --fstype="xfs" --ondisk=sda --size=512
 #part pv.01 --fstype="lvmpv" --ondisk=sda --grow
