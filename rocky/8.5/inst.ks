@@ -1,5 +1,4 @@
 # Use CDROM installation media
-install
 url --url=http://dl.rockylinux.org/pub/rocky/8.5/BaseOS/x86_64/os/
 repo --name="AppStream" --baseurl=http://dl.rockylinux.org/pub/rocky/8.5/AppStream/x86_64/os/
 repo --name="BaseOS" --baseurl=http://dl.rockylinux.org/pub/rocky/8.5/BaseOS/x86_64/os/
@@ -10,7 +9,7 @@ text
 # Don't run the Setup Agent on first boot
 firstboot --disabled
 eula --agreed
-#ignoredisk --only-use=sda
+ignoredisk --only-use=sda
 # Keyboard layouts
 keyboard --xlayouts='br'
 # System language
