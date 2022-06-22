@@ -4,12 +4,12 @@ repo --name="AppStream" --baseurl=http://dl.rockylinux.org/pub/rocky/8.5/AppStre
 repo --name="BaseOS" --baseurl=http://dl.rockylinux.org/pub/rocky/8.5/BaseOS/x86_64/os/
 cdrom
 # Use text install
-# text
-graphical
+text
+# graphical
 # Don't run the Setup Agent on first boot
 firstboot --disabled
 eula --agreed
-# ignoredisk --only-use=sda
+ignoredisk --only-use=sda,sdb
 # Keyboard layouts
 keyboard --xlayouts='br'
 # System language
