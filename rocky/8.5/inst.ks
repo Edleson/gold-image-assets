@@ -16,8 +16,7 @@ keyboard --xlayouts='br'
 # System language
 lang en_US.UTF-8
 # Network information
-network  --bootproto=dhcp --ipv6=auto --activate
-network  --hostname=rocky85.localdomain
+network  --bootproto=dhcp --device=eth0 --ipv6=ignore --activate --hostname=rocky85.localdomain 
 # Root password
 rootpw --iscrypted $6$4buGu5Vw7TCmOjXv$Jxtd.W7i1XprZaGA5yem2icnNmTAt.8VM3RspvnYhtoWw548Itrr5uVuQiz3/6OSFBqdTSr4t.DsXxzOYeTpM0
 # System services
