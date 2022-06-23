@@ -26,12 +26,12 @@ services --enabled="NetworkManager,sshd,rsyslog,chronyd,cloud-init,cloud-init-lo
 # System timezone
 timezone America/Sao_Paulo --isUtc
 # System booloader configuration
-bootloader --location=mbr --append="nousbstorage"
+bootloader --location=mbr
 # Partition clearing information
-clearpart --all --initlabel
+clearpart --none --initlabel
 # Disk partitionning information
-zerombr
-autopart
+#zerombr
+#autopart
 # part /boot --fstype="xfs" --ondisk=sda --size=512
 # part pv.01 --fstype="lvmpv" --ondisk=sda --grow
 # volgroup vg_root --pesize=4096 pv.01
@@ -39,6 +39,9 @@ autopart
 # logvol /var --fstype="xfs" --size=10240 --name=lv_var --vgname=vg_root
 # logvol / --fstype="xfs" --size=10240 --name=lv_root --vgname=vg_root
 # logvol swap --fstype="swap" --size=4092 --name=lv_swap --vgname=vg_root
+
+part / --fstype="xfs" --grow --size=6144
+part swap --fstype="swap" --size=512
 
 # Use network installation
 #url --url="http://dl.rockylinux.org/pub/rocky/8.5/BaseOS/x86_64/os/"
@@ -49,8 +52,7 @@ reboot
 # System services
 #services --disabled="kdump" --enabled="NetworkManager,sshd,rsyslog,chronyd,cloud-init,cloud-init-local,cloud-config,cloud-final,rngd,qemu-guest-agent"
 # Disk partitioning information
-#part / --fstype="xfs" --grow --size=6144
-#part swap --fstype="swap" --size=512
+
 
 %packages --ignoremissing --excludedocs
 @core
