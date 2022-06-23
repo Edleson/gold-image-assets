@@ -26,7 +26,7 @@ services --enabled="NetworkManager,sshd,rsyslog,chronyd,cloud-init,cloud-init-lo
 # System timezone
 timezone America/Sao_Paulo --isUtc
 # System booloader configuration
-bootloader --location=mbr 
+bootloader --location=mbr --append="nousbstorage"
 # Partition clearing information
 clearpart --all --initlabel
 # Disk partitionning information
