@@ -40,7 +40,7 @@ firstboot --disabled
 skipx
 
 # System services
-services --disabled="kdump" --enabled="NetworkManager,sshd,chronyd,cloud-init,cloud-init-local,cloud-config,cloud-final,rngd,qemu-guest-agent"
+services --disabled="kdump" --enabled="NetworkManager,sshd,qemu-guest-agent"
 
 # System timezone
 timezone America/Sao_Paulo --isUtc
