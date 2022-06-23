@@ -49,7 +49,6 @@ clearpart --none --initlabel
 #logvol / --fstype="xfs" --name=lv_root --vgname=vg_root --percent=100 --grow
 #logvol swap --fstype="swap" --name=lv_swap --vgname=vg_root  --recommended
 
-
 part / --fstype="xfs" --grow --size=6144
 part swap --fstype="swap" --size=512
 
