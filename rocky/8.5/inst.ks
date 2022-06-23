@@ -40,19 +40,18 @@ bootloader --location=mbr
 clearpart --none --initlabel
 
 # Disk partitionning information
-part /boot --fstype="xfs" --ondisk=sda --size=512
-part pv.01 --fstype="lvmpv" --ondisk=sda --grow
-
+#part /boot --fstype="xfs" --ondisk=sda --size=512
+#part pv.01 --fstype="lvmpv" --ondisk=sda --grow
 # LVM Partition
-volgroup vg_root --pesize=4096 pv.01
+#volgroup vg_root --pesize=4096 pv.01
 # logvol /home --fstype="xfs" --size=5120 --name=lv_home --vgname=vg_root
 # logvol /var --fstype="xfs" --size=10240 --name=lv_var --vgname=vg_root
-logvol / --fstype="xfs" --name=lv_root --vgname=vg_root --percent=100 --grow
-logvol swap --fstype="swap" --name=lv_swap --vgname=vg_root  --recommended
+#logvol / --fstype="xfs" --name=lv_root --vgname=vg_root --percent=100 --grow
+#logvol swap --fstype="swap" --name=lv_swap --vgname=vg_root  --recommended
 
 
-# part / --fstype="xfs" --grow --size=6144
-# part swap --fstype="swap" --size=512
+part / --fstype="xfs" --grow --percent=100
+part swap --fstype="swap" --size=512
 
 # Do not configure the X Window System
 skipx
