@@ -47,7 +47,7 @@ part pv.01 --fstype="lvmpv" --ondisk=sda --grow
 volgroup vg_root --pesize=4096 pv.01
 # logvol /home --fstype="xfs" --size=5120 --name=lv_home --vgname=vg_root
 # logvol /var --fstype="xfs" --size=10240 --name=lv_var --vgname=vg_root
-logvol swap --recommended
+logvol swap --vgname=vg_root --name=lv_swap --fstype="swap" --recommended
 logvol / --vgname=vg_root --name=lv_root --fstype="xfs" --grow
 
 # part / --fstype="xfs" --grow --size=6144
