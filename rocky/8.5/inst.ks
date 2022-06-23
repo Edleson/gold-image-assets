@@ -28,7 +28,7 @@ rootpw --iscrypted $6$4buGu5Vw7TCmOjXv$Jxtd.W7i1XprZaGA5yem2icnNmTAt.8VM3RspvnYh
 # System services
 selinux --permissive
 firewall --enabled --service="ssh"
-services --enabled="NetworkManager,sshd,rsyslog,chronyd,cloud-init,cloud-init-local,cloud-config,cloud-final,rngd,qemu-guest-agent"
+services --disabled="kdump" --enabled="NetworkManager,sshd,rsyslog,chronyd,cloud-init,cloud-init-local,cloud-config,cloud-final,rngd,qemu-guest-agent"
 
 # System timezone
 timezone America/Sao_Paulo --isUtc
@@ -50,20 +50,12 @@ volgroup vg_root --pesize=4096 pv.01
 logvol swap --recommended
 logvol / --vgname=vg_root --name=lv_root --fstype="xfs" --grow
 
-
 # part / --fstype="xfs" --grow --size=6144
 # part swap --fstype="swap" --size=512
 
-# Use network installation
-#url --url="http://dl.rockylinux.org/pub/rocky/8.5/BaseOS/x86_64/os/"
-#repo --name="BaseOS" --baseurl=http://dl.rockylinux.org/pub/rocky/8.5/BaseOS/x86_64/os/
 # Do not configure the X Window System
 skipx
 reboot
-# System services
-#services --disabled="kdump" --enabled="NetworkManager,sshd,rsyslog,chronyd,cloud-init,cloud-init-local,cloud-config,cloud-final,rngd,qemu-guest-agent"
-# Disk partitioning information
-
 
 %packages --ignoremissing --excludedocs
 @core
