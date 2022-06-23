@@ -18,7 +18,7 @@ keyboard --xlayouts='br'
 lang en_US.UTF-8
 
 # Use network installation
-url --url="http://dl.rockylinux.org/pub/rocky/8.5/BaseOS/x86_64/os/"
+# url --url="http://dl.rockylinux.org/pub/rocky/8.5/BaseOS/x86_64/os/"
 
 # Firewall information
 firewall --enabled --service=ssh
@@ -27,8 +27,8 @@ firewall --enabled --service=ssh
 network  --bootproto=dhcp --ipv6=auto --activate
 network  --hostname=localhost.localdomain
 
-repo --name="AppStream" --baseurl=http://dl.rockylinux.org/pub/rocky/8.5/AppStream/x86_64/os/
-repo --name="BaseOS" --baseurl=http://dl.rockylinux.org/pub/rocky/8.5/BaseOS/x86_64/os/
+# repo --name="AppStream" --baseurl=http://dl.rockylinux.org/pub/rocky/8.5/AppStream/x86_64/os/
+# repo --name="BaseOS" --baseurl=http://dl.rockylinux.org/pub/rocky/8.5/BaseOS/x86_64/os/
 
 # Root password
 rootpw --iscrypted $6$4buGu5Vw7TCmOjXv$Jxtd.W7i1XprZaGA5yem2icnNmTAt.8VM3RspvnYhtoWw548Itrr5uVuQiz3/6OSFBqdTSr4t.DsXxzOYeTpM0
@@ -40,7 +40,7 @@ firstboot --disabled
 skipx
 
 # System services
-services --disabled="kdump" --enabled="NetworkManager,sshd,rsyslog,chronyd,cloud-init,cloud-init-local,cloud-config,cloud-final,rngd,qemu-guest-agent"
+services --disabled="kdump" --enabled="NetworkManager,sshd"
 
 # System timezone
 timezone America/Sao_Paulo --isUtc
@@ -51,47 +51,50 @@ part swap --fstype="swap" --size=512
 reboot
 
 %packages --ignoremissing --excludedocs
-@core
-NetworkManager
-chrony
-cloud-init
-cloud-utils-growpart
-cockpit-system
-cockpit-ws
-dhcp-client
-dnf
-dnf-utils
-dracut-config-generic
-dracut-norescue
-firewalld
-gdisk
-grub2
-kernel
-nfs-utils
-python3-jsonschema
-qemu-guest-agent
-rng-tools
-rocky-release
-rsync
-tar
-yum
-yum-utils
-traceroute
-wget
-telnet
-OpenIPMI
-ipmitool
-git
-nano
-kexec-tools
-bind-utils
-zip
+@Base
+@Core
+openssh-clients
+sudo
+kernel-headers
+kernel-devel
 net-tools
-nfs-utils
-nfs4-acl-tools
-jq
-patch
-bzip2
+#NetworkManager
+#cloud-init
+#cloud-utils-growpart
+#qemu-guest-agent
+#firewalld
+#jq
+#cockpit-system
+#cockpit-ws
+#dhcp-client
+#dracut-config-generic
+#dracut-norescue
+#gdisk
+#grub2
+#kernel
+#nfs-utils
+#python3-jsonschema
+#rng-tools
+#rocky-release
+#rsync
+#tar
+#yum
+#yum-utils
+#traceroute
+#wget
+#telnet
+#OpenIPMI
+#ipmitool
+#git
+#nano
+#kexec-tools
+#bind-utils
+#zip
+#net-tools
+#nfs-utils
+#nfs4-acl-tools
+#patch
+#bzip2
 
 # unnecessary firmware
 -aic94xx-firmware
