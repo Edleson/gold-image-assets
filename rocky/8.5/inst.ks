@@ -1,9 +1,5 @@
 #version=RHEL8
 ignoredisk --only-use=sda
-
-# Partition clearing information
-clearpart --none --initlabel
-
 # Use graphical install
 # graphical
 
@@ -33,68 +29,89 @@ network  --hostname=localhost.localdomain
 # Root password
 rootpw --iscrypted $6$4buGu5Vw7TCmOjXv$Jxtd.W7i1XprZaGA5yem2icnNmTAt.8VM3RspvnYhtoWw548Itrr5uVuQiz3/6OSFBqdTSr4t.DsXxzOYeTpM0
 
-auth --enableshadow --passalgo=sha512 --kickstart
+
 # Run the Setup Agent on first boot
 firstboot --disabled
 
-# Do not configure the X Window System
-skipx
+
 
 # System services
-services --disabled="kdump" --enabled="NetworkManager,sshd"
+services --disabled="kdump" --enabled="NetworkManager,sshd,chronyd"
 
 # System timezone
 timezone America/Sao_Paulo --isUtc
 
+# System booloader configuration
+bootloader --location=mbr --boot-drive=sda
+# Partition clearing information
+clearpart --all --initlabel --drives=sda
 # Disk partitioning information
-part / --fstype="xfs" --grow --size=6144
+#part / --fstype="xfs" --grow --size=6144
+#part swap --fstype="swap" --size=512
+part /boot --fstype="xfs" --ondisk=sda --size=512
+part pv.01 --fstype="lvmpv" --ondisk=sda --grow
+volgroup vg_root --pesize=4096 pv.01
+logvol /var --fstype="xfs" --size=10240 --name=lv_var --vgname=vg_root
+logvol / --fstype="xfs" --size=10240 --name=lv_root --vgname=vg_root
+logvol swap --fstype="swap" --size=4092 --name=lv_swap --vgname=vg_root
 
-part swap --fstype="swap" --size=512
+# Do not configure the X Window System
+skipx
 
 reboot
 
 %packages --ignoremissing --excludedocs
-@core
-NetworkManager
-cloud-init
-cloud-utils-growpart
-rsync
-qemu-guest-agent
-chrony
-cockpit-system
-cockpit-ws
-dhcp-client
-dnf
+openssh-clients
+curl
 dnf-utils
-dracut-config-generic
-dracut-norescue
-firewalld
-gdisk
-grub2
-kernel
-nfs-utils
-python3-jsonschema
-rng-tools
-rocky-release
-tar
-yum
-yum-utils
-traceroute
-wget
-telnet
-OpenIPMI
-ipmitool
-git
-nano
-kexec-tools
-bind-utils
-zip
+drpm
 net-tools
-nfs-utils
-nfs4-acl-tools
-jq
-patch
-bzip2
+open-vm-tools
+sudo
+vim
+wget
+python3
+# @core
+# NetworkManager
+# cloud-init
+# cloud-utils-growpart
+# rsync
+# qemu-guest-agent
+# chrony
+# cockpit-system
+# cockpit-ws
+# dhcp-client
+# dnf
+# dnf-utils
+# dracut-config-generic
+# dracut-norescue
+# firewalld
+# gdisk
+# grub2
+# kernel
+# nfs-utils
+# python3-jsonschema
+# rng-tools
+# rocky-release
+# tar
+# yum
+# yum-utils
+# traceroute
+# wget
+# telnet
+# OpenIPMI
+# ipmitool
+# git
+# nano
+# kexec-tools
+# bind-utils
+# zip
+# net-tools
+# nfs-utils
+# nfs4-acl-tools
+# jq
+# patch
+# bzip2
 
 # unnecessary firmware
 -aic94xx-firmware
