@@ -10,7 +10,7 @@ clearpart --none --initlabel
 # Use CDROM installation media
 cdrom
 text
-
+eula --agreed
 # Keyboard layouts
 keyboard --xlayouts='br'
 
@@ -33,6 +33,7 @@ network  --hostname=localhost.localdomain
 # Root password
 rootpw --iscrypted $6$4buGu5Vw7TCmOjXv$Jxtd.W7i1XprZaGA5yem2icnNmTAt.8VM3RspvnYhtoWw548Itrr5uVuQiz3/6OSFBqdTSr4t.DsXxzOYeTpM0
 
+auth --enableshadow --passalgo=sha512 --kickstart
 # Run the Setup Agent on first boot
 firstboot --disabled
 
@@ -47,7 +48,9 @@ timezone America/Sao_Paulo --isUtc
 
 # Disk partitioning information
 part / --fstype="xfs" --grow --size=6144
+
 part swap --fstype="swap" --size=512
+
 reboot
 
 %packages --ignoremissing --excludedocs
