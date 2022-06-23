@@ -50,7 +50,7 @@ clearpart --none --initlabel
 #logvol swap --fstype="swap" --name=lv_swap --vgname=vg_root  --recommended
 
 
-part / --fstype="xfs" --grow --percent=100
+part / --fstype="xfs" --grow --size=6144
 part swap --fstype="swap" --size=512
 
 # Do not configure the X Window System
