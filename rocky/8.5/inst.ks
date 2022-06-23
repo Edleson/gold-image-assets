@@ -6,11 +6,11 @@ cdrom
 # Use text install
 text
 # graphical
-auth --enableshadow --passalgo=sha512 --kickstart
+#auth --enableshadow --passalgo=sha512 --kickstart
 # Don't run the Setup Agent on first boot
 firstboot --disabled
 eula --agreed
-ignoredisk --only-use=sda
+#ignoredisk --only-use=sda
 # Keyboard layouts
 keyboard --xlayouts='br'
 # System language
