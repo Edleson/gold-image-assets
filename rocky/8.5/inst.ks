@@ -18,7 +18,7 @@ keyboard --xlayouts='br'
 lang en_US.UTF-8
 
 # Use network installation
-url --url="http://dl.rockylinux.org/pub/rocky/8.5/BaseOS/x86_64/os/"
+# url --url="http://dl.rockylinux.org/pub/rocky/8.5/BaseOS/x86_64/os/"
 
 # Firewall information
 firewall --enabled --service=ssh
@@ -27,8 +27,8 @@ firewall --enabled --service=ssh
 network  --bootproto=dhcp --ipv6=auto --activate
 network  --hostname=localhost.localdomain
 
-repo --name="AppStream" --baseurl=http://dl.rockylinux.org/pub/rocky/8.5/AppStream/x86_64/os/
-repo --name="BaseOS" --baseurl=http://dl.rockylinux.org/pub/rocky/8.5/BaseOS/x86_64/os/
+# repo --name="AppStream" --baseurl=http://dl.rockylinux.org/pub/rocky/8.5/AppStream/x86_64/os/
+# repo --name="BaseOS" --baseurl=http://dl.rockylinux.org/pub/rocky/8.5/BaseOS/x86_64/os/
 
 # Root password
 rootpw --iscrypted $6$4buGu5Vw7TCmOjXv$Jxtd.W7i1XprZaGA5yem2icnNmTAt.8VM3RspvnYhtoWw548Itrr5uVuQiz3/6OSFBqdTSr4t.DsXxzOYeTpM0
