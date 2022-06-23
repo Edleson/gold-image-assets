@@ -28,10 +28,11 @@ timezone America/Sao_Paulo --isUtc
 # System booloader configuration
 bootloader --location=mbr
 # Partition clearing information
-clearpart --none --initlabel
+# clearpart --none --initlabel
+clearpart --all --drives=sda
 # Disk partitionning information
-#zerombr
-#autopart
+zerombr
+autopart
 # part /boot --fstype="xfs" --ondisk=sda --size=512
 # part pv.01 --fstype="lvmpv" --ondisk=sda --grow
 # volgroup vg_root --pesize=4096 pv.01
@@ -40,8 +41,8 @@ clearpart --none --initlabel
 # logvol / --fstype="xfs" --size=10240 --name=lv_root --vgname=vg_root
 # logvol swap --fstype="swap" --size=4092 --name=lv_swap --vgname=vg_root
 
-part / --fstype="xfs" --grow --size=6144
-part swap --fstype="swap" --size=512
+# part / --fstype="xfs" --grow --size=6144
+# part swap --fstype="swap" --size=512
 
 # Use network installation
 #url --url="http://dl.rockylinux.org/pub/rocky/8.5/BaseOS/x86_64/os/"
