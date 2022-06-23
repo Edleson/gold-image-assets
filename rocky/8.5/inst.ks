@@ -4,6 +4,9 @@ ignoredisk --only-use=sda
 # Partition clearing information
 clearpart --none --initlabel
 
+# Use graphical install
+# graphical
+
 # Use CDROM installation media
 cdrom
 text
@@ -15,16 +18,17 @@ keyboard --xlayouts='br'
 lang en_US.UTF-8
 
 # Use network installation
-# url --url="http://dl.rockylinux.org/pub/rocky/8.5/BaseOS/x86_64/os/"
+url --url="http://dl.rockylinux.org/pub/rocky/8.5/BaseOS/x86_64/os/"
 
 # Firewall information
-firewall --disabled
+firewall --enabled --service=ssh
 
 # Network information
-network  --bootproto=dhcp --ipv6=auto --activate --hostname=rocky85.localdomain
+network  --bootproto=dhcp --ipv6=auto --activate
+network  --hostname=localhost.localdomain
 
-# repo --name="AppStream" --baseurl=http://dl.rockylinux.org/pub/rocky/8.5/AppStream/x86_64/os/
-# repo --name="BaseOS" --baseurl=http://dl.rockylinux.org/pub/rocky/8.5/BaseOS/x86_64/os/
+repo --name="AppStream" --baseurl=http://dl.rockylinux.org/pub/rocky/8.5/AppStream/x86_64/os/
+repo --name="BaseOS" --baseurl=http://dl.rockylinux.org/pub/rocky/8.5/BaseOS/x86_64/os/
 
 # Root password
 rootpw --iscrypted $6$4buGu5Vw7TCmOjXv$Jxtd.W7i1XprZaGA5yem2icnNmTAt.8VM3RspvnYhtoWw548Itrr5uVuQiz3/6OSFBqdTSr4t.DsXxzOYeTpM0
@@ -36,7 +40,7 @@ firstboot --disabled
 skipx
 
 # System services
-services --disabled="kdump" --enabled="NetworkManager,sshd"
+services --disabled="kdump" --enabled="NetworkManager,sshd,rsyslog,chronyd,cloud-init,cloud-init-local,cloud-config,cloud-final,rngd,qemu-guest-agent"
 
 # System timezone
 timezone America/Sao_Paulo --isUtc
@@ -44,56 +48,50 @@ timezone America/Sao_Paulo --isUtc
 # Disk partitioning information
 part / --fstype="xfs" --grow --size=6144
 part swap --fstype="swap" --size=512
-
-user --name=k3tadmin --plaintext --password=Packer --groups=wheel
-
 reboot
 
 %packages --ignoremissing --excludedocs
-@Base
-#@Core
-openssh-clients
-sudo
-kernel-headers
-kernel-devel
+@core
+NetworkManager
+cloud-init
+cloud-utils-growpart
+rsync
+qemu-guest-agent
+chrony
+cockpit-system
+cockpit-ws
+dhcp-client
+dnf
+dnf-utils
+dracut-config-generic
+dracut-norescue
+firewalld
+gdisk
+grub2
+kernel
+nfs-utils
+python3-jsonschema
+rng-tools
+rocky-release
+tar
+yum
+yum-utils
+traceroute
+wget
+telnet
+OpenIPMI
+ipmitool
+git
+nano
+kexec-tools
+bind-utils
+zip
 net-tools
-#NetworkManager
-#cloud-init
-#cloud-utils-growpart
-#qemu-guest-agent
-#firewalld
-#jq
-#cockpit-system
-#cockpit-ws
-#dhcp-client
-#dracut-config-generic
-#dracut-norescue
-#gdisk
-#grub2
-#kernel
-#nfs-utils
-#python3-jsonschema
-#rng-tools
-#rocky-release
-#rsync
-#tar
-#yum
-#yum-utils
-#traceroute
-#wget
-#telnet
-#OpenIPMI
-#ipmitool
-#git
-#nano
-#kexec-tools
-#bind-utils
-#zip
-#net-tools
-#nfs-utils
-#nfs4-acl-tools
-#patch
-#bzip2
+nfs-utils
+nfs4-acl-tools
+jq
+patch
+bzip2
 
 # unnecessary firmware
 -aic94xx-firmware
@@ -131,8 +129,8 @@ net-tools
 %post
 
 # Manage k3tadmin access
-#useradd -m -u 1000 k3tadmin
-#mkdir /home/k3tadmin/.ssh
+useradd -m -u 1000 k3tadmin
+mkdir /home/k3tadmin/.ssh
 echo -e "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDih36iZoYeRyTjUwZI6Ec7UNzRW/498fqW0XCHysTtn5aQSpmrJAiBOWQ4aLWHnswRQaw3fR+hR7OQ9De9pOKe7i6vv35CQlnpeyVmQf0Yw3FYTbbCLi7YBuLPgqp+XMUSG/ugtEivn5ZYV3wjE1C3IETqceH2R8u5qbSuyHlW5DbuYoKyiLo0RXm+2Lpya+qKVV1lHYR04oJKNSN4xYRVngrMNTmOgUpm+1fH8K6NAtYHsTP97MnkAFi2wCgngANJ0HX7BI/zNMxYkH+X+aVuPyy5riRqbzIjCb4a0PBw9mHQExleiIbI+iB5VPqKyQaKEWe6I1O/iNvbjOasDarVroTkgdQM5RuT4mM+EQkB0gjrbtOxA4aV+MKbwdu1SIEu18sYnf/qkts8g27S3/aCWbhkXxvAyhbdHIRUNMtS1BJY/XJgSDz7zFKgBLMdsw9eCCcI8hAbVQSsFVe8vrDUPjPT/5KNLme3xX1E1FSKC4OApMeYTWNDl3wfoQ4zQPM= k3tadmin@kode3" >  /home/k3tadmin/.ssh/authorized_keys
 chown -R k3tadmin:k3tadmin /home/k3tadmin/.ssh
 chmod 700 /home/k3tadmin/.ssh
