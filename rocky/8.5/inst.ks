@@ -7,7 +7,7 @@ cdrom
 # Use text install
 text
 # graphical
-
+ 
 # Don't run the Setup Agent on first boot
 firstboot --disabled
 eula --agreed
