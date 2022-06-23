@@ -21,7 +21,7 @@ lang en_US.UTF-8
 firewall --disabled
 
 # Network information
-network  --bootproto=dhcp --activate --hostname=rocky85.localdomain
+network  --bootproto=dhcp --ipv6=auto --activate --hostname=rocky85.localdomain
 
 # repo --name="AppStream" --baseurl=http://dl.rockylinux.org/pub/rocky/8.5/AppStream/x86_64/os/
 # repo --name="BaseOS" --baseurl=http://dl.rockylinux.org/pub/rocky/8.5/BaseOS/x86_64/os/
