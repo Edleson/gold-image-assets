@@ -28,8 +28,8 @@ timezone America/Sao_Paulo --isUtc
 # System booloader configuration
 bootloader --location=mbr
 # Partition clearing information
-# clearpart --none --initlabel
-clearpart --all --drives=sda
+clearpart --all --initlabel
+# clearpart --all --drives=sda
 # Disk partitionning information
 zerombr
 autopart
