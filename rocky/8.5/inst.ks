@@ -3,43 +3,53 @@ url --url=http://dl.rockylinux.org/pub/rocky/8.5/BaseOS/x86_64/os/
 repo --name="AppStream" --baseurl=http://dl.rockylinux.org/pub/rocky/8.5/AppStream/x86_64/os/
 repo --name="BaseOS" --baseurl=http://dl.rockylinux.org/pub/rocky/8.5/BaseOS/x86_64/os/
 cdrom
+
 # Use text install
 text
 # graphical
-#auth --enableshadow --passalgo=sha512 --kickstart
+
 # Don't run the Setup Agent on first boot
 firstboot --disabled
 eula --agreed
-#ignoredisk --only-use=sdb
+ignoredisk --only-use=sda
+
 # Keyboard layouts
 keyboard --xlayouts='br'
+
 # System language
 lang en_US.UTF-8
+
 # Network information
 network  --bootproto=dhcp --device=eth0 --ipv6=ignore --activate --hostname=rocky85.localdomain 
+
 # Root password
 rootpw --iscrypted $6$4buGu5Vw7TCmOjXv$Jxtd.W7i1XprZaGA5yem2icnNmTAt.8VM3RspvnYhtoWw548Itrr5uVuQiz3/6OSFBqdTSr4t.DsXxzOYeTpM0
+
 # System services
 selinux --permissive
 firewall --enabled --service="ssh"
 services --enabled="NetworkManager,sshd,rsyslog,chronyd,cloud-init,cloud-init-local,cloud-config,cloud-final,rngd,qemu-guest-agent"
+
 # System timezone
 timezone America/Sao_Paulo --isUtc
+
 # System booloader configuration
 bootloader --location=mbr
+
 # Partition clearing information
-#clearpart --all --initlabel
-# clearpart --all --drives=sdb
+clearpart --none --initlabel
+
 # Disk partitionning information
-#zerombr
-autopart
-# part /boot --fstype="xfs" --ondisk=sda --size=512
-# part pv.01 --fstype="lvmpv" --ondisk=sda --grow
-# volgroup vg_root --pesize=4096 pv.01
+part /boot --fstype="xfs" --ondisk=sda --size=512
+part pv.01 --fstype="lvmpv" --ondisk=sda --grow
+
+# LVM Partition
+volgroup vg_root --pesize=4096 pv.01
 # logvol /home --fstype="xfs" --size=5120 --name=lv_home --vgname=vg_root
 # logvol /var --fstype="xfs" --size=10240 --name=lv_var --vgname=vg_root
-# logvol / --fstype="xfs" --size=10240 --name=lv_root --vgname=vg_root
-# logvol swap --fstype="swap" --size=4092 --name=lv_swap --vgname=vg_root
+logvol swap --recommended
+logvol / --vgname=vg_root --name=lv_root --fstype="xfs" --grow
+
 
 # part / --fstype="xfs" --grow --size=6144
 # part swap --fstype="swap" --size=512
