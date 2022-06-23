@@ -10,7 +10,7 @@ text
 # Don't run the Setup Agent on first boot
 firstboot --disabled
 eula --agreed
-#ignoredisk --only-use=sda
+ignoredisk --only-use=sdb
 # Keyboard layouts
 keyboard --xlayouts='br'
 # System language
@@ -28,8 +28,8 @@ timezone America/Sao_Paulo --isUtc
 # System booloader configuration
 bootloader --location=mbr
 # Partition clearing information
-clearpart --all --initlabel
-# clearpart --all --drives=sda
+#clearpart --all --initlabel
+clearpart --all --drives=sdb
 # Disk partitionning information
 zerombr
 autopart
