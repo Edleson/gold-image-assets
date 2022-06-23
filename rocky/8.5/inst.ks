@@ -50,10 +50,13 @@ clearpart --all --initlabel --drives=sda
 #part swap --fstype="swap" --size=512
 part /boot --fstype="xfs" --ondisk=sda --size=512
 part pv.01 --fstype="lvmpv" --ondisk=sda --grow
+# VG LVM
 volgroup vg_root --pesize=4096 pv.01
-logvol /var --fstype="xfs" --size=10240 --name=lv_var --vgname=vg_root
-logvol / --fstype="xfs" --size=10240 --name=lv_root --vgname=vg_root
-logvol swap --fstype="swap" --size=4092 --name=lv_swap --vgname=vg_root
+
+#LV LVM
+logvol /var --fstype="xfs" --percent=100 --name=lv_var --vgname=vg_root
+logvol / --fstype="xfs" --size=5120 --name=lv_root --vgname=vg_root
+logvol swap --fstype="swap" --name=lv_swap --vgname=vg_root --recommended
 
 # Do not configure the X Window System
 skipx
