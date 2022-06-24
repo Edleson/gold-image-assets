@@ -28,12 +28,11 @@ network  --bootproto=dhcp --noipv6 --activate --hostname=rocky85.localdomain
 # Root password
 rootpw --iscrypted $6$4buGu5Vw7TCmOjXv$Jxtd.W7i1XprZaGA5yem2icnNmTAt.8VM3RspvnYhtoWw548Itrr5uVuQiz3/6OSFBqdTSr4t.DsXxzOYeTpM0
 
-
 # Run the Setup Agent on first boot
 firstboot --disabled
 
 # System services
-services --disabled="kdump" --enabled="NetworkManager,sshd,chronyd,qemu-guest-agent"
+services --disabled="kdump" --enabled="NetworkManager,sshd,rsyslog,chronyd,cloud-init,cloud-init-local,cloud-config,cloud-final,rngd,qemu-guest-agent"
 
 # System timezone
 timezone America/Sao_Paulo --isUtc
@@ -64,59 +63,47 @@ skipx
 reboot
 
 %packages --ignoremissing --excludedocs
-@Core
-qemu-guest-agent
-openssh-clients
-curl
+@core
+NetworkManager
+chrony
+cloud-init
+cloud-utils-growpart
+cockpit-system
+cockpit-ws
+dhcp-client
+dnf
 dnf-utils
-drpm
-net-tools
-open-vm-tools
-sudo
-vim
+dracut-config-generic
+dracut-norescue
+firewalld
+gdisk
+grub2
+kernel
+nfs-utils
+python3-jsonschema
+qemu-guest-agent
+rng-tools
+rocky-release
+rsync
+tar
+yum
+yum-utils
+traceroute
 wget
-python3
-# @core
-# NetworkManager
-# cloud-init
-# cloud-utils-growpart
-# rsync
-# qemu-guest-agent
-# chrony
-# cockpit-system
-# cockpit-ws
-# dhcp-client
-# dnf
-# dnf-utils
-# dracut-config-generic
-# dracut-norescue
-# firewalld
-# gdisk
-# grub2
-# kernel
-# nfs-utils
-# python3-jsonschema
-# rng-tools
-# rocky-release
-# tar
-# dnf
-# dnf-utils
-# traceroute
-# wget
-# telnet
-# OpenIPMI
-# ipmitool
-# git
-# nano
-# kexec-tools
-# bind-utils
-# zip
-# net-tools
-# nfs-utils
-# nfs4-acl-tools
-# jq
-# patch
-# bzip2
+telnet
+OpenIPMI
+ipmitool
+git
+nano
+kexec-tools
+bind-utils
+zip
+net-tools
+nfs-utils
+nfs4-acl-tools
+jq
+patch
+bzip2
 
 # unnecessary firmware
 -aic94xx-firmware
