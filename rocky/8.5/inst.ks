@@ -48,14 +48,15 @@ clearpart --all --initlabel --drives=sda
 # Disk partitioning information
 #part / --fstype="xfs" --grow --size=6144
 #part swap --fstype="swap" --size=512
-part /boot --fstype="xfs" --ondisk=sda --size=512
+
+part /boot --fstype="ext4" --ondisk=sda --size=512
 part pv.01 --fstype="lvmpv" --ondisk=sda --grow
 # VG LVM
 volgroup vg_root --pesize=4096 pv.01
 
 #LV LVM
-logvol /var --fstype="xfs" --percent=100 --name=lv_var --vgname=vg_root
-logvol / --fstype="xfs" --size=5120 --name=lv_root --vgname=vg_root
+logvol /var --fstype="ext4" --percent=100 --name=lv_var --vgname=vg_root
+logvol / --fstype="ext4" --size=5120 --name=lv_root --vgname=vg_root
 logvol swap --fstype="swap" --name=lv_swap --vgname=vg_root --recommended
 
 # Do not configure the X Window System
