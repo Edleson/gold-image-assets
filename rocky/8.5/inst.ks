@@ -139,18 +139,7 @@ bzip2
 %end
 
 %post
-dnf update -y
-dnf install -y epel-release
-dnf install -y 
-    qemu-guest-agent \
-    cloud-init \
-    cloud-init-local \
-    cloud-config \
-    cloud-final \
-    jq \
-    cloud-utils-growpart
 
-systemctl enable qemu-guest-agent cloud-init cloud-init-local cloud-config cloud-final
 # Manage k3tadmin access
 # useradd -m -u 1000 k3tadmin
 # mkdir /home/k3tadmin/.ssh
