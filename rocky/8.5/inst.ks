@@ -33,7 +33,7 @@ rootpw --iscrypted $6$4buGu5Vw7TCmOjXv$Jxtd.W7i1XprZaGA5yem2icnNmTAt.8VM3RspvnYh
 firstboot --disabled
 
 # System services
-services --disabled="kdump" --enabled="NetworkManager,sshd,chronyd"
+services --disabled="kdump" --enabled="NetworkManager,sshd,chronyd,qemu-guest-agent"
 
 # System timezone
 timezone America/Sao_Paulo --isUtc
@@ -64,6 +64,7 @@ skipx
 reboot
 
 %packages --ignoremissing --excludedocs
+@Core
 qemu-guest-agent
 openssh-clients
 curl
