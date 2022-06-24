@@ -20,8 +20,7 @@ lang en_US.UTF-8
 firewall --enabled --service=ssh
 
 # Network information
-network  --bootproto=dhcp --ipv6=auto --activate
-network  --hostname=localhost.localdomain
+network  --bootproto=dhcp --noipv6 --activate --hostname=rocky85.localdomain
 
 # repo --name="AppStream" --baseurl=http://dl.rockylinux.org/pub/rocky/8.5/AppStream/x86_64/os/
 # repo --name="BaseOS" --baseurl=http://dl.rockylinux.org/pub/rocky/8.5/BaseOS/x86_64/os/
@@ -49,14 +48,14 @@ clearpart --all --initlabel --drives=sda
 #part / --fstype="xfs" --grow --size=6144
 #part swap --fstype="swap" --size=512
 
-part /boot --fstype="ext4" --ondisk=sda --size=512
+part /boot --fstype="xfs" --ondisk=sda --size=512
 part pv.01 --fstype="lvmpv" --ondisk=sda --grow
 # VG LVM
 volgroup vg_root --pesize=4096 pv.01
 
 #LV LVM
-logvol /var --fstype="ext4" --percent=100 --name=lv_var --vgname=vg_root
-logvol / --fstype="ext4" --size=5120 --name=lv_root --vgname=vg_root
+logvol /var --fstype="xfs" --percent=100 --name=lv_var --vgname=vg_root
+logvol / --fstype="xfs" --size=5120 --name=lv_root --vgname=vg_root
 logvol swap --fstype="swap" --name=lv_swap --vgname=vg_root --recommended
 
 # Do not configure the X Window System
@@ -99,8 +98,8 @@ python3
 # rng-tools
 # rocky-release
 # tar
-# yum
-# yum-utils
+# dnf
+# dnf-utils
 # traceroute
 # wget
 # telnet
@@ -152,9 +151,18 @@ python3
 %end
 
 %post
-yum update -y
-yum install -y epel-release
-yum install -y qemu-guest-agent cloud-init cloud-init-local cloud-config cloud-final 
+dnf update -y
+dnf install -y epel-release
+dnf install -y 
+    qemu-guest-agent \
+    cloud-init \
+    cloud-init-local \
+    cloud-config \
+    cloud-final \
+    jq \
+    cloud-utils-growpart
+
+systemctl enable qemu-guest-agent cloud-init cloud-init-local cloud-config cloud-final
 # Manage k3tadmin access
 # useradd -m -u 1000 k3tadmin
 # mkdir /home/k3tadmin/.ssh
@@ -165,20 +173,17 @@ chmod 600 /home/k3tadmin/.ssh/authorized_keys
 echo "k3tadmin        ALL=(ALL)       NOPASSWD: ALL" > /etc/sudoers.d/k3tadmin
 chmod 440 /etc/sudoers.d/k3tadmin
 
-#systemctl enable vmtoolsd
-#systemctl start vmtoolsd
-
 # this is installed by default but we don't need it in virt
 echo "Removing linux-firmware package."
-yum -C -y remove linux-firmware
+dnf -C -y remove linux-firmware
 
 # Remove firewalld; it is required to be present for install/image building.
 echo "Removing firewalld."
-yum -C -y remove firewalld --setopt="clean_requirements_on_remove=1"
+dnf -C -y remove firewalld --setopt="clean_requirements_on_remove=1"
 
 # remove avahi and networkmanager
 echo "Removing avahi/zeroconf and NetworkManager"
-yum -C -y remove avahi\* 
+dnf -C -y remove avahi\* 
 
 echo -n "Getty fixes"
 # although we want console output going to the serial console, we don't
@@ -210,15 +215,14 @@ echo "RUN_FIRSTBOOT=NO" > /etc/sysconfig/firstboot
 echo "Fixing SELinux contexts."
 touch /var/log/cron
 touch /var/log/boot.log
-mkdir -p /var/cache/yum
+mkdir -p /var/cache/dnf
 /usr/sbin/fixfiles -R -a restore
 
 # reorder console entries
 sed -i 's/console=tty0/console=tty0 console=ttyS0,115200n8/' /boot/grub2/grub.cfg
-
-yum update -y
 sed -i "s/^.*requiretty/#Defaults requiretty/" /etc/sudoers
-yum clean all
+
+dnf clean all
 
 %end
 
