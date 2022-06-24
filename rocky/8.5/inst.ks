@@ -32,7 +32,7 @@ rootpw --iscrypted $6$4buGu5Vw7TCmOjXv$Jxtd.W7i1XprZaGA5yem2icnNmTAt.8VM3RspvnYh
 firstboot --disabled
 
 # System services
-services --disabled="kdump" --enabled="NetworkManager,sshd,rsyslog,chronyd,cloud-init,cloud-init-local,cloud-config,cloud-final,rngd,qemu-guest-agent"
+services --disabled="kdump" --enabled="NetworkManager,sshd,chronyd"
 
 # System timezone
 timezone America/Sao_Paulo --isUtc
@@ -139,7 +139,18 @@ bzip2
 %end
 
 %post
+dnf update -y
+dnf install -y epel-release
+dnf install -y 
+    qemu-guest-agent \
+    cloud-init \
+    cloud-init-local \
+    cloud-config \
+    cloud-final \
+    jq \
+    cloud-utils-growpart
 
+systemctl enable qemu-guest-agent cloud-init cloud-init-local cloud-config cloud-final
 # Manage k3tadmin access
 # useradd -m -u 1000 k3tadmin
 # mkdir /home/k3tadmin/.ssh
