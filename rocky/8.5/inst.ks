@@ -152,7 +152,11 @@ python3
 %end
 
 %post
+yum install -y epel-release
 
+yum update -y
+
+yum install -y qemu-guest-agent cloud-init cloud-init-local cloud-config cloud-final 
 # Manage k3tadmin access
 # useradd -m -u 1000 k3tadmin
 # mkdir /home/k3tadmin/.ssh
@@ -167,56 +171,56 @@ chmod 440 /etc/sudoers.d/k3tadmin
 #systemctl start vmtoolsd
 
 # this is installed by default but we don't need it in virt
-# echo "Removing linux-firmware package."
-# yum -C -y remove linux-firmware
-# 
-# # Remove firewalld; it is required to be present for install/image building.
-# echo "Removing firewalld."
-# yum -C -y remove firewalld --setopt="clean_requirements_on_remove=1"
-# 
-# # remove avahi and networkmanager
-# echo "Removing avahi/zeroconf and NetworkManager"
-# yum -C -y remove avahi\* 
-# 
-# echo -n "Getty fixes"
-# # although we want console output going to the serial console, we don't
-# # actually have the opportunity to login there. FIX.
-# # we don't really need to auto-spawn _any_ gettys.
-# sed -i '/^#NAutoVTs=.*/ a\
-# NAutoVTs=0' /etc/systemd/logind.conf
-# 
-# # set virtual-guest as default profile for tuned
-# echo "virtual-guest" > /etc/tuned/active_profile
-# 
-# # Because memory is scarce resource in most cloud/virt environments,
-# # and because this impedes forensics, we are differing from the Fedora
-# # default of having /tmp on tmpfs.
-# echo "Disabling tmpfs for /tmp."
-# systemctl mask tmp.mount
-# 
-# cat <<EOL > /etc/sysconfig/kernel
-# # UPDATEDEFAULT specifies if new-kernel-pkg should make
-# # new kernels the default
-# UPDATEDEFAULT=yes
-# 
-# # DEFAULTKERNEL specifies the default kernel package type
-# DEFAULTKERNEL=kernel
-# EOL
-# 
-# # make sure firstboot doesn't start
-# echo "RUN_FIRSTBOOT=NO" > /etc/sysconfig/firstboot
-# echo "Fixing SELinux contexts."
-# touch /var/log/cron
-# touch /var/log/boot.log
-# mkdir -p /var/cache/yum
-# /usr/sbin/fixfiles -R -a restore
-# 
-# # reorder console entries
-# sed -i 's/console=tty0/console=tty0 console=ttyS0,115200n8/' /boot/grub2/grub.cfg
-# 
-# yum update -y
-# sed -i "s/^.*requiretty/#Defaults requiretty/" /etc/sudoers
-# yum clean all
+echo "Removing linux-firmware package."
+yum -C -y remove linux-firmware
+
+# Remove firewalld; it is required to be present for install/image building.
+echo "Removing firewalld."
+yum -C -y remove firewalld --setopt="clean_requirements_on_remove=1"
+
+# remove avahi and networkmanager
+echo "Removing avahi/zeroconf and NetworkManager"
+yum -C -y remove avahi\* 
+
+echo -n "Getty fixes"
+# although we want console output going to the serial console, we don't
+# actually have the opportunity to login there. FIX.
+# we don't really need to auto-spawn _any_ gettys.
+sed -i '/^#NAutoVTs=.*/ a\
+NAutoVTs=0' /etc/systemd/logind.conf
+
+# set virtual-guest as default profile for tuned
+echo "virtual-guest" > /etc/tuned/active_profile
+
+# Because memory is scarce resource in most cloud/virt environments,
+# and because this impedes forensics, we are differing from the Fedora
+# default of having /tmp on tmpfs.
+echo "Disabling tmpfs for /tmp."
+systemctl mask tmp.mount
+
+cat <<EOL > /etc/sysconfig/kernel
+# UPDATEDEFAULT specifies if new-kernel-pkg should make
+# new kernels the default
+UPDATEDEFAULT=yes
+
+# DEFAULTKERNEL specifies the default kernel package type
+DEFAULTKERNEL=kernel
+EOL
+
+# make sure firstboot doesn't start
+echo "RUN_FIRSTBOOT=NO" > /etc/sysconfig/firstboot
+echo "Fixing SELinux contexts."
+touch /var/log/cron
+touch /var/log/boot.log
+mkdir -p /var/cache/yum
+/usr/sbin/fixfiles -R -a restore
+
+# reorder console entries
+sed -i 's/console=tty0/console=tty0 console=ttyS0,115200n8/' /boot/grub2/grub.cfg
+
+yum update -y
+sed -i "s/^.*requiretty/#Defaults requiretty/" /etc/sudoers
+yum clean all
 
 %end
 
