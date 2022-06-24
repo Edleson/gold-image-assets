@@ -141,14 +141,7 @@ bzip2
 %post
 dnf update -y
 dnf install -y epel-release
-dnf install -y 
-    qemu-guest-agent \
-    cloud-init \
-    cloud-init-local \
-    cloud-config \
-    cloud-final \
-    jq \
-    cloud-utils-growpart
+dnf install -y qemu-guest-agent cloud-init cloud-init-local cloud-config cloud-final jq cloud-utils-growpart
 
 systemctl enable qemu-guest-agent cloud-init cloud-init-local cloud-config cloud-final
 # Manage k3tadmin access
