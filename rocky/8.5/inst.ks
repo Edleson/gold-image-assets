@@ -34,7 +34,7 @@ rootpw --iscrypted $6$4buGu5Vw7TCmOjXv$Jxtd.W7i1XprZaGA5yem2icnNmTAt.8VM3RspvnYh
 firstboot --disabled
 
 # System services
-services --disabled="kdump" --enabled="NetworkManager,sshd,chronyd,qemu-guest-agent"
+services --disabled="kdump" --enabled="NetworkManager,sshd,chronyd"
 
 # System timezone
 timezone America/Sao_Paulo --isUtc
@@ -152,10 +152,8 @@ python3
 %end
 
 %post
-yum install -y epel-release
-
 yum update -y
-
+yum install -y epel-release
 yum install -y qemu-guest-agent cloud-init cloud-init-local cloud-config cloud-final 
 # Manage k3tadmin access
 # useradd -m -u 1000 k3tadmin
