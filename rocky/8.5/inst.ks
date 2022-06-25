@@ -146,7 +146,7 @@ dnf install -y qemu-guest-agent cloud-init jq cloud-utils-growpart rocky-release
 systemctl enable qemu-guest-agent cloud-init
 # Manage k3tadmin access
 # useradd -m -u 1000 k3tadmin
-# mkdir /home/k3tadmin/.ssh
+mkdir /home/k3tadmin/.ssh
 echo -e "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDih36iZoYeRyTjUwZI6Ec7UNzRW/498fqW0XCHysTtn5aQSpmrJAiBOWQ4aLWHnswRQaw3fR+hR7OQ9De9pOKe7i6vv35CQlnpeyVmQf0Yw3FYTbbCLi7YBuLPgqp+XMUSG/ugtEivn5ZYV3wjE1C3IETqceH2R8u5qbSuyHlW5DbuYoKyiLo0RXm+2Lpya+qKVV1lHYR04oJKNSN4xYRVngrMNTmOgUpm+1fH8K6NAtYHsTP97MnkAFi2wCgngANJ0HX7BI/zNMxYkH+X+aVuPyy5riRqbzIjCb4a0PBw9mHQExleiIbI+iB5VPqKyQaKEWe6I1O/iNvbjOasDarVroTkgdQM5RuT4mM+EQkB0gjrbtOxA4aV+MKbwdu1SIEu18sYnf/qkts8g27S3/aCWbhkXxvAyhbdHIRUNMtS1BJY/XJgSDz7zFKgBLMdsw9eCCcI8hAbVQSsFVe8vrDUPjPT/5KNLme3xX1E1FSKC4OApMeYTWNDl3wfoQ4zQPM= k3tadmin@kode3" >  /home/k3tadmin/.ssh/authorized_keys
 chown -R k3tadmin:k3tadmin /home/k3tadmin/.ssh
 chmod 700 /home/k3tadmin/.ssh
