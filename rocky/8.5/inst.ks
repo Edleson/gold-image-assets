@@ -66,44 +66,44 @@ reboot
 @core
 NetworkManager
 chrony
-cloud-init
-cloud-utils-growpart
-cockpit-system
-cockpit-ws
-dhcp-client
-dnf
-dnf-utils
-dracut-config-generic
-dracut-norescue
-firewalld
-gdisk
-grub2
-kernel
-nfs-utils
-python3-jsonschema
-qemu-guest-agent
-rng-tools
-rocky-release
-rsync
-tar
-yum
-yum-utils
-traceroute
-wget
-telnet
-OpenIPMI
-ipmitool
-git
-nano
-kexec-tools
-bind-utils
-zip
-net-tools
-nfs-utils
-nfs4-acl-tools
-jq
-patch
-bzip2
+# cloud-init
+# cloud-utils-growpart
+# cockpit-system
+# cockpit-ws
+# dhcp-client
+# dnf
+# dnf-utils
+# dracut-config-generic
+# dracut-norescue
+# firewalld
+# gdisk
+# grub2
+# kernel
+# nfs-utils
+# python3-jsonschema
+# qemu-guest-agent
+# rng-tools
+# rocky-release
+# rsync
+# tar
+# yum
+# yum-utils
+# traceroute
+# wget
+# telnet
+# OpenIPMI
+# ipmitool
+# git
+# nano
+# kexec-tools
+# bind-utils
+# zip
+# net-tools
+# nfs-utils
+# nfs4-acl-tools
+# jq
+# patch
+# bzip2
 
 # unnecessary firmware
 -aic94xx-firmware
