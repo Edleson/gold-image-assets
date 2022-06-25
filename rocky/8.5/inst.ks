@@ -141,7 +141,7 @@ chrony
 %post
 dnf update -y
 dnf install -y epel-release
-dnf install -y qemu-guest-agent cloud-init jq cloud-utils-growpart rocky-release wget curl net-tools
+dnf install -y qemu-guest-agent cloud-init jq cloud-utils-growpart rocky-release wget curl net-tools zip unzip bzip2 git tar rocky-release net-tools
 
 systemctl enable qemu-guest-agent cloud-init
 # Manage k3t-user access
