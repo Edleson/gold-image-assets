@@ -31,7 +31,7 @@ repo --name="AppStream" --baseurl=http://dl.rockylinux.org/pub/rocky/8.6/AppStre
 repo --name="BaseOS" --baseurl=http://dl.rockylinux.org/pub/rocky/8.6/BaseOS/x86_64/os/
 
 # Root password
-rootpw --iscrypted $6$4buGu5Vw7TCmOjXv$Jxtd.W7i1XprZaGA5yem2icnNmTAt.8VM3RspvnYhtoWw548Itrr5uVuQiz3/6OSFBqdTSr4t.DsXxzOYeTpM0
+rootpw --plaintext Packer
 
 # Run the Setup Agent on first boot
 firstboot --disabled
@@ -44,6 +44,8 @@ services --disabled="kdump" --enabled="NetworkManager,sshd,rsyslog,chronyd,cloud
 
 # System timezone
 timezone America/Sao_Paulo --isUtc
+
+user --name=k3t-user --plaintext --password=Packer --groups=wheel
 
 # Disk partitioning information
 part / --fstype="xfs" --grow --size=6144
@@ -130,15 +132,15 @@ parted
 
 %post
 
-# Manage k3tadmin access
-useradd -m -u 1000 k3tadmin
-mkdir /home/k3tadmin/.ssh
-echo -e "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDih36iZoYeRyTjUwZI6Ec7UNzRW/498fqW0XCHysTtn5aQSpmrJAiBOWQ4aLWHnswRQaw3fR+hR7OQ9De9pOKe7i6vv35CQlnpeyVmQf0Yw3FYTbbCLi7YBuLPgqp+XMUSG/ugtEivn5ZYV3wjE1C3IETqceH2R8u5qbSuyHlW5DbuYoKyiLo0RXm+2Lpya+qKVV1lHYR04oJKNSN4xYRVngrMNTmOgUpm+1fH8K6NAtYHsTP97MnkAFi2wCgngANJ0HX7BI/zNMxYkH+X+aVuPyy5riRqbzIjCb4a0PBw9mHQExleiIbI+iB5VPqKyQaKEWe6I1O/iNvbjOasDarVroTkgdQM5RuT4mM+EQkB0gjrbtOxA4aV+MKbwdu1SIEu18sYnf/qkts8g27S3/aCWbhkXxvAyhbdHIRUNMtS1BJY/XJgSDz7zFKgBLMdsw9eCCcI8hAbVQSsFVe8vrDUPjPT/5KNLme3xX1E1FSKC4OApMeYTWNDl3wfoQ4zQPM= k3tadmin@kode3" >  /home/k3tadmin/.ssh/authorized_keys
-chown -R k3tadmin:k3tadmin /home/k3tadmin/.ssh
-chmod 700 /home/k3tadmin/.ssh
-chmod 600 /home/k3tadmin/.ssh/authorized_keys
-echo "k3tadmin ALL=(ALL:ALL) NOPASSWD:ALL" > /etc/sudoers.d/k3tadmin
-chmod 440 /etc/sudoers.d/k3tadmin
+# Manage k3t-user access
+# useradd -m -u 1000 k3t-user
+mkdir /home/k3t-user/.ssh
+echo -e "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDih36iZoYeRyTjUwZI6Ec7UNzRW/498fqW0XCHysTtn5aQSpmrJAiBOWQ4aLWHnswRQaw3fR+hR7OQ9De9pOKe7i6vv35CQlnpeyVmQf0Yw3FYTbbCLi7YBuLPgqp+XMUSG/ugtEivn5ZYV3wjE1C3IETqceH2R8u5qbSuyHlW5DbuYoKyiLo0RXm+2Lpya+qKVV1lHYR04oJKNSN4xYRVngrMNTmOgUpm+1fH8K6NAtYHsTP97MnkAFi2wCgngANJ0HX7BI/zNMxYkH+X+aVuPyy5riRqbzIjCb4a0PBw9mHQExleiIbI+iB5VPqKyQaKEWe6I1O/iNvbjOasDarVroTkgdQM5RuT4mM+EQkB0gjrbtOxA4aV+MKbwdu1SIEu18sYnf/qkts8g27S3/aCWbhkXxvAyhbdHIRUNMtS1BJY/XJgSDz7zFKgBLMdsw9eCCcI8hAbVQSsFVe8vrDUPjPT/5KNLme3xX1E1FSKC4OApMeYTWNDl3wfoQ4zQPM= k3t-user@kode3" >  /home/k3t-user/.ssh/authorized_keys
+chown -R k3t-user:k3t-user /home/k3t-user/.ssh
+chmod 700 /home/k3t-user/.ssh
+chmod 600 /home/k3t-user/.ssh/authorized_keys
+echo "k3t-user ALL=(ALL:ALL) NOPASSWD:ALL" > /etc/sudoers.d/k3t-user
+chmod 440 /etc/sudoers.d/k3t-user
 
 systemctl enable vmtoolsd
 systemctl start vmtoolsd
