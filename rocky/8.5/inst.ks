@@ -66,44 +66,46 @@ reboot
 @core
 NetworkManager
 chrony
-# cloud-init
-# cloud-utils-growpart
-# cockpit-system
-# cockpit-ws
-# dhcp-client
-# dnf
-# dnf-utils
-# dracut-config-generic
-# dracut-norescue
-# firewalld
-# gdisk
-# grub2
-# kernel
-# nfs-utils
-# python3-jsonschema
-# qemu-guest-agent
-# rng-tools
-# rocky-release
-# rsync
-# tar
-# yum
-# yum-utils
-# traceroute
-# wget
-# telnet
-# OpenIPMI
-# ipmitool
-# git
-# nano
-# kexec-tools
-# bind-utils
-# zip
-# net-tools
-# nfs-utils
-# nfs4-acl-tools
-# jq
-# patch
-# bzip2
+cloud-init
+cloud-utils-growpart
+cockpit-system
+cockpit-ws
+dhcp-client
+dnf
+dnf-utils
+dracut-config-generic
+dracut-norescue
+firewalld
+gdisk
+grub2
+kernel
+nfs-utils
+python3-jsonschema
+qemu-guest-agent
+rng-tools
+rocky-release
+rsync
+tar
+yum
+yum-utils
+traceroute
+wget
+telnet
+OpenIPMI
+ipmitool
+git
+nano
+kexec-tools
+bind-utils
+zip
+net-tools
+nfs-utils
+nfs4-acl-tools
+jq
+patch
+bzip2
+htop
+parted
 
 # unnecessary firmware
 -aic94xx-firmware
@@ -141,7 +143,7 @@ chrony
 %post
 dnf update -y
 dnf install -y epel-release
-dnf install -y qemu-guest-agent cloud-init jq cloud-utils-growpart rocky-release wget curl net-tools zip unzip bzip2 git tar rocky-release net-tools
+dnf install -y qemu-guest-agent cloud-init jq cloud-utils-growpart rocky-release wget curl net-tools zip unzip bzip2 git tar parted htop 
 
 systemctl enable qemu-guest-agent cloud-init
 # Manage k3t-user access

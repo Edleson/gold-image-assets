@@ -92,6 +92,8 @@ nfs4-acl-tools
 jq
 patch
 bzip2
+htop
+parted
 
 # unnecessary firmware
 -aic94xx-firmware
