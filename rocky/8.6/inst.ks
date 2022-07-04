@@ -133,6 +133,7 @@ parted
 
 %post
 
+yum update -y
 # Manage k3t-user access
 # useradd -m -u 1000 k3t-user
 mkdir /home/k3t-user/.ssh
@@ -192,10 +193,8 @@ mkdir -p /var/cache/yum
 /usr/sbin/fixfiles -R -a restore
 
 # reorder console entries
-sed -i 's/console=tty0/console=tty0 console=ttyS0,115200n8/' /boot/grub2/grub.cfg
-
-yum update -y
-sed -i "s/^.*requiretty/#Defaults requiretty/" /etc/sudoers
+# sed -i 's/console=tty0/console=tty0 console=ttyS0,115200n8/' /boot/grub2/grub.cfg
+# sed -i "s/^.*requiretty/#Defaults requiretty/" /etc/sudoers
 
 # UPGRADE KERNEL
 rpm --import https://www.elrepo.org/RPM-GPG-KEY-elrepo.org
