@@ -143,7 +143,7 @@ parted
 %post
 dnf update -y
 dnf install -y epel-release
-dnf install -y qemu-guest-agent cloud-init jq cloud-utils-growpart rocky-release wget curl net-tools zip unzip bzip2 git tar parted htop 
+dnf install -y qemu-guest-agent cloud-init jq cloud-utils-growpart rocky-release wget curl net-tools zip unzip bzip2 git tar parted htop python3 sudo
 
 systemctl enable qemu-guest-agent cloud-init
 # Manage k3t-user access
@@ -204,6 +204,14 @@ mkdir -p /var/cache/dnf
 # reorder console entries
 sed -i 's/console=tty0/console=tty0 console=ttyS0,115200n8/' /boot/grub2/grub.cfg
 sed -i "s/^.*requiretty/#Defaults requiretty/" /etc/sudoers
+
+# UPGRADE KERNEL
+rpm --import https://www.elrepo.org/RPM-GPG-KEY-elrepo.org
+dnf install https://www.elrepo.org/elrepo-release-8.el8.elrepo.noarch.rpm -y
+# dnf --enablerepo=elrepo-kernel install kernel-ml kernel-ml-headers -y # mainline kernel
+dnf --enablerepo=elrepo-kernel install kernel-lt kernel-lt-headers -y # Long term suport
+grub2-set-default 0
+grub2-mkconfig -o /boot/grub2/grub.cfg
 
 dnf clean all
 
