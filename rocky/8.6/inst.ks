@@ -45,7 +45,7 @@ services --disabled="kdump" --enabled="NetworkManager,sshd,rsyslog,chronyd,cloud
 # System timezone
 timezone America/Sao_Paulo --isUtc
 
-user --name=k3t-user --plaintext --password=Packer --groups=wheel
+user --groups=wheel --name=k3t-user --password=$6$wKC3PBcKxuQGUY4L$2YsRElu9W4jW3.76nGu.f1eVXg3UXwp1Dzm7z3TQ5PTkKAe4GgKsvwQzzTrhw0hhzfOXB8ukphB0j8yJstzpJ0 --iscrypted --uid=1000 --gecos="K3T Admin User" --gid=1000
 
 # Disk partitioning information
 part / --fstype="xfs" --grow --size=6144
@@ -53,50 +53,51 @@ part swap --fstype="swap" --size=512
 reboot
 
 %packages --ignoremissing --excludedocs
-@core
-NetworkManager
-chrony
-cloud-init
-cloud-utils-growpart
-cockpit-system
-cockpit-ws
-dhcp-client
-dnf
-dnf-utils
-dracut-config-generic
-dracut-norescue
-firewalld
-gdisk
-grub2
-kernel
-nfs-utils
-python3
-python3-jsonschema
-qemu-guest-agent
-rng-tools
-rocky-release
-rsync
-tar
-yum
-yum-utils
-traceroute
-wget
-telnet
-OpenIPMI
-ipmitool
-git
-nano
-kexec-tools
-bind-utils
-zip
-net-tools
-nfs-utils
-nfs4-acl-tools
-jq
-patch
-bzip2
-htop
-parted
+@^minimal-environment
+# @core
+# NetworkManager
+# chrony
+# cloud-init
+# cloud-utils-growpart
+# cockpit-system
+# cockpit-ws
+# dhcp-client
+# dnf
+# dnf-utils
+# dracut-config-generic
+# dracut-norescue
+# firewalld
+# gdisk
+# grub2
+# kernel
+# nfs-utils
+# python3
+# python3-jsonschema
+# qemu-guest-agent
+# rng-tools
+# rocky-release
+# rsync
+# tar
+# dnf
+# dnf-utils
+# traceroute
+# wget
+# telnet
+# OpenIPMI
+# ipmitool
+# git
+# nano
+# kexec-tools
+# bind-utils
+# zip
+# net-tools
+# nfs-utils
+# nfs4-acl-tools
+# jq
+# patch
+# bzip2
+# htop
+# parted
 
 # unnecessary firmware
 -aic94xx-firmware
@@ -133,9 +134,10 @@ parted
 
 %post
 
-yum update -y
-# Manage k3t-user access
-# useradd -m -u 1000 k3t-user
+# dnf update -y
+
+dnf install -y cloud-init cloud-utils-growpart qemu-guest-agent rsync
+
 mkdir /home/k3t-user/.ssh
 echo -e "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDih36iZoYeRyTjUwZI6Ec7UNzRW/498fqW0XCHysTtn5aQSpmrJAiBOWQ4aLWHnswRQaw3fR+hR7OQ9De9pOKe7i6vv35CQlnpeyVmQf0Yw3FYTbbCLi7YBuLPgqp+XMUSG/ugtEivn5ZYV3wjE1C3IETqceH2R8u5qbSuyHlW5DbuYoKyiLo0RXm+2Lpya+qKVV1lHYR04oJKNSN4xYRVngrMNTmOgUpm+1fH8K6NAtYHsTP97MnkAFi2wCgngANJ0HX7BI/zNMxYkH+X+aVuPyy5riRqbzIjCb4a0PBw9mHQExleiIbI+iB5VPqKyQaKEWe6I1O/iNvbjOasDarVroTkgdQM5RuT4mM+EQkB0gjrbtOxA4aV+MKbwdu1SIEu18sYnf/qkts8g27S3/aCWbhkXxvAyhbdHIRUNMtS1BJY/XJgSDz7zFKgBLMdsw9eCCcI8hAbVQSsFVe8vrDUPjPT/5KNLme3xX1E1FSKC4OApMeYTWNDl3wfoQ4zQPM= k3t-user@kode3" >  /home/k3t-user/.ssh/authorized_keys
 chown -R k3t-user:k3t-user /home/k3t-user/.ssh
@@ -144,20 +146,23 @@ chmod 600 /home/k3t-user/.ssh/authorized_keys
 echo "k3t-user ALL=(ALL:ALL) NOPASSWD:ALL" > /etc/sudoers.d/k3t-user
 chmod 440 /etc/sudoers.d/k3t-user
 
-systemctl enable vmtoolsd
-systemctl start vmtoolsd
+systemctl enable qemu-guest-agent cloud-init
+systemctl start qemu-guest-agent cloud-init
+
+# permit root login via SSH with password authetication
+echo "PermitRootLogin yes" > /etc/ssh/sshd_config.d/01-permitrootlogin.conf
 
 # this is installed by default but we don't need it in virt
 echo "Removing linux-firmware package."
-yum -C -y remove linux-firmware
+dnf -C -y remove linux-firmware
 
 # Remove firewalld; it is required to be present for install/image building.
 echo "Removing firewalld."
-yum -C -y remove firewalld --setopt="clean_requirements_on_remove=1"
+dnf -C -y remove firewalld --setopt="clean_requirements_on_remove=1"
 
 # remove avahi and networkmanager
 echo "Removing avahi/zeroconf and NetworkManager"
-yum -C -y remove avahi\* 
+dnf -C -y remove avahi\* 
 
 echo -n "Getty fixes"
 # although we want console output going to the serial console, we don't
@@ -189,7 +194,7 @@ echo "RUN_FIRSTBOOT=NO" > /etc/sysconfig/firstboot
 echo "Fixing SELinux contexts."
 touch /var/log/cron
 touch /var/log/boot.log
-mkdir -p /var/cache/yum
+mkdir -p /var/cache/dnf
 /usr/sbin/fixfiles -R -a restore
 
 # reorder console entries
@@ -198,13 +203,13 @@ mkdir -p /var/cache/yum
 
 # UPGRADE KERNEL
 rpm --import https://www.elrepo.org/RPM-GPG-KEY-elrepo.org
-yum install https://www.elrepo.org/elrepo-release-8.el8.elrepo.noarch.rpm -y
-# yum --enablerepo=elrepo-kernel install kernel-ml kernel-ml-headers -y # mainline kernel
-yum --enablerepo=elrepo-kernel install kernel-lt kernel-lt-headers -y # Long term suport
+dnf install https://www.elrepo.org/elrepo-release-8.el8.elrepo.noarch.rpm -y
+# dnf --enablerepo=elrepo-kernel install kernel-ml kernel-ml-headers -y # mainline kernel
+dnf --enablerepo=elrepo-kernel install kernel-lt kernel-lt-headers -y # Long term suport
 grub2-set-default 0
 grub2-mkconfig -o /boot/grub2/grub.cfg
 
-yum clean all
+dnf clean all
 
 %end
 
