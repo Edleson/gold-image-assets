@@ -1,55 +1,51 @@
 #version=RHEL8
 ignoredisk --only-use=sda
-
 # Partition clearing information
 clearpart --none --initlabel
 
-# Use graphical install
-# graphical
-
 # Use CDROM installation media
 cdrom
-text
-
+# Use graphical install
+graphical
+# text
 # Keyboard layouts
 keyboard --xlayouts='br'
-
 # System language
 lang en_US.UTF-8
-
-# Use network installation
-url --url="http://dl.rockylinux.org/pub/rocky/8.6/BaseOS/x86_64/os/"
-
 # Firewall information
 firewall --enabled --service=ssh
-
 # Network information
-network  --bootproto=dhcp --ipv6=auto --activate
+network  --bootproto=dhcp --activate
 network  --hostname=rl8-6.localdomain
-
-repo --name="AppStream" --baseurl=http://dl.rockylinux.org/pub/rocky/8.6/AppStream/x86_64/os/
-repo --name="BaseOS" --baseurl=http://dl.rockylinux.org/pub/rocky/8.6/BaseOS/x86_64/os/
-
-# Root password
-rootpw --plaintext Packer
+# Repos
+# repo --name="AppStream" --baseurl=http://dl.rockylinux.org/pub/rocky/8.6/AppStream/x86_64/os/
+# repo --name="BaseOS" --baseurl=http://dl.rockylinux.org/pub/rocky/8.6/BaseOS/x86_64/os/
+# Use network installation
+# url --url="http://dl.rockylinux.org/pub/rocky/8.6/BaseOS/x86_64/os/"
 
 # Run the Setup Agent on first boot
 firstboot --disabled
-
 # Do not configure the X Window System
 skipx
-
 # System services
-services --disabled="kdump" --enabled="NetworkManager,sshd,rsyslog,chronyd,cloud-init,cloud-init-local,cloud-config,cloud-final,rngd,qemu-guest-agent"
-
+# services --disabled="kdump" --enabled="NetworkManager,sshd,rsyslog,chronyd,cloud-init,cloud-init-local,cloud-config,cloud-final,rngd,qemu-guest-agent"
 # System timezone
 timezone America/Sao_Paulo --isUtc
-
+# Root password
+rootpw --plaintext Packer
+# Admin user
 user --groups=wheel --name=k3t-user --password=$6$wKC3PBcKxuQGUY4L$2YsRElu9W4jW3.76nGu.f1eVXg3UXwp1Dzm7z3TQ5PTkKAe4GgKsvwQzzTrhw0hhzfOXB8ukphB0j8yJstzpJ0 --iscrypted --uid=1000 --gecos="K3T Admin User" --gid=1000
 
 # Disk partitioning information
-part / --fstype="xfs" --grow --size=6144
-part swap --fstype="swap" --size=512
+# part / --fstype="xfs" --grow --size=6144
+# part swap --fstype="swap" --size=512
+# Disk partitioning information
+part pv.302 --fstype="lvmpv" --ondisk=sda --size=32255
+part /boot --fstype="xfs" --ondisk=sda --size=512
+volgroup rocky --pesize=4096 pv.302
+logvol swap --fstype="swap" --size=1024 --name=swap --vgname=rocky
+logvol / --fstype="xfs" --size=31227 --name=root --vgname=rocky
+
 reboot
 
 %packages --ignoremissing --excludedocs
