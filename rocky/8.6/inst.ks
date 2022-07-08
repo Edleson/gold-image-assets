@@ -32,7 +32,7 @@ skipx
 # System timezone
 timezone America/Sao_Paulo --isUtc
 # Root password
-rootpw --plaintext Packer
+rootpw --iscrypted $6$n4DQUg67g7VjVmXe$SqqPdv66Uv01Krh1LzeFmI2dSMqoQIlIhrrD.jCiDIlYGYUoSl5mmODpXm5bBnw5GtyJ56.IgMG2fnqlyYDsN0
 # Admin user
 user --groups=wheel --name=k3t-user --password=$6$wKC3PBcKxuQGUY4L$2YsRElu9W4jW3.76nGu.f1eVXg3UXwp1Dzm7z3TQ5PTkKAe4GgKsvwQzzTrhw0hhzfOXB8ukphB0j8yJstzpJ0 --iscrypted --uid=1000 --gecos="K3T Admin User" --gid=1000
 
